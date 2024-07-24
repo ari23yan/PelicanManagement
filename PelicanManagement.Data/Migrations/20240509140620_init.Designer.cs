@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Shop.Data.Context;
+using PelicanManagement.Data.Context;
 
 #nullable disable
 
-namespace Shop.Data.Migrations
+namespace PelicanManagement.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20240509140620_init")]

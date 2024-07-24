@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Shop.Data.Migrations
+namespace PelicanManagement.Data.Migrations
 {
     /// <inheritdoc />
     public partial class init : Migration

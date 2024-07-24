@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Services.Interfaces
+namespace PelicanManagement.Application.Services.Interfaces
 {
     public interface ILogService
     {

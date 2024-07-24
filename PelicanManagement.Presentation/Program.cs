@@ -1,15 +1,15 @@
 using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Shop.Data.Context;
-using Shop.Ioc;
+using PelicanManagement.Data.Context;
+using PelicanManagement.Ioc;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddDbContext<AppDbContext>(option =>
-    option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
+    option.UseSqlServer(builder.Configuration.GetConnectionString("PelicanManagementConnection")
     ));
 
 builder.Services.AddDependencies();
@@ -36,7 +36,7 @@ builder.Services.AddControllers(x =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Shop Project", Version = "v1", Description = "Shop Project Rest Api Services - 2024 - By : TwentyThree (Ariyanrahmaniii@gmail.com) " });
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pelican Management", Version = "v1", Description = "Pelican Management Rest Api Services - 2024" });
 
     // Include the XML comments from your controllers
     //c.EnableAnnotations();

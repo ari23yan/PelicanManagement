@@ -1,16 +1,21 @@
-﻿using Shop.Domain.Enums;
+﻿using PelicanManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
-namespace Shop.Domain.Dtos.Common.Pagination
+
+
+namespace PelicanManagement.Domain.Dtos.Common.Pagination
 {
     public class PaginationDto
     {
-        public int Page { get; set; } = 1;
-        public string? searchkey { get; set; }
-        public FilterType? filterType { get; set; }
+        public int PageNumber { get; set; } = 1;
+        public int PageSize { get; set; } = 10;
+        public string? Searchkey { get; set; }
+        [EnumDataType(typeof(FilterType))]
+        public FilterType? FilterType { get; set; }  = Enums.FilterType.Desc;
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.Entities.Common
+namespace PelicanManagement.Domain.Entities.Common
 {
     public class BaseEntity
     {
@@ -17,5 +17,6 @@ namespace Shop.Domain.Entities.Common
         public bool IsModified { get; set; } = false;
         public DateTime? ModifiedDate { get; set; }
         public Guid? ModifiedBy { get; set; }
+        public Guid? CreatedBy { get; set; }
     }
 }

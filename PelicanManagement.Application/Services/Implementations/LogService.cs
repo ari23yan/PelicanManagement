@@ -1,13 +1,16 @@
-﻿using Shop.Application.Services.Interfaces;
-using Shop.Domain.Entities.Common;
-using Shop.Domain.Interfaces;
+﻿using PelicanManagement.Application.Services.Interfaces;
+using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Interfaces;
+using PelicanManagement.Application.Services.Interfaces;
+using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Services.Implementations
+namespace PelicanManagement.Application.Services.Implementations
 {
     public class LogService : ILogService
     {
@@ -32,7 +35,6 @@ namespace Shop.Application.Services.Implementations
                 UserAgent = userAgent,
             };
             await _logRepository.AddAsync(log);
-            await _logRepository.SaveAsync();
         }
     }
 }

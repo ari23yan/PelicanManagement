@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Security
+namespace PelicanManagement.Application.Security
 {
     public class PasswordHasher : IPasswordHasher
     {

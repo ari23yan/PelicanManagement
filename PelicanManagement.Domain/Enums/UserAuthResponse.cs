@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace PelicanManagement.Domain.Enums
 {
-    public enum SignInType:byte
+    public enum UserAuthResponse
     {
-        Email,
-        Mobile
+        Success,
+        NotFound,
+        WrongPassword,
+        NotAvtive,
+        IsDeleted,
+        TooManyTries
     }
 }

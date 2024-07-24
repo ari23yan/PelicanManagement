@@ -5,10 +5,10 @@ using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
-using Shop.Domain.Dtos.Sender;
+using PelicanManagement.Domain.Dtos.Sender;
 
 
-namespace Shop.Application.Senders
+namespace PelicanManagement.Application.Senders
 {
     public class Sender : ISender
     {

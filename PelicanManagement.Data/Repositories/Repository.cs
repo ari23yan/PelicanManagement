@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shop.Data.Context;
-using Shop.Domain.Interfaces;
+using PelicanManagement.Data.Context;
+using PelicanManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Data.Repositories
+namespace PelicanManagement.Data.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -23,16 +23,13 @@ namespace Shop.Data.Repositories
 
         public async Task AddAsync(T entity)
         {
-            using var transaction = await Context.Database.BeginTransactionAsync();
             try
             {
                 await entities.AddAsync(entity);
-                await SaveAsync();
-                await transaction.CommitAsync();
+                await Context.SaveChangesAsync();
             }
             catch (Exception)
             {
-                await transaction.RollbackAsync();
                 throw;
             }
         }
@@ -62,14 +59,16 @@ namespace Shop.Data.Repositories
             entities.Remove(entity);
         }
 
-        public virtual async void Update(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             using var transaction = await Context.Database.BeginTransactionAsync();
+
             try
             {
                 entities.Update(entity);
                 await Context.SaveChangesAsync();
                 await transaction.CommitAsync();
+
             }
             catch (Exception)
             {
@@ -78,25 +77,37 @@ namespace Shop.Data.Repositories
             }
         }
 
-        public async Task SaveAsync()
-        {
-            try
-            {
-                await Context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-        }
         public async Task<int> GetCountAsync(Expression<Func<T, bool>> filter)
         {
-            return await entities.Where(filter).CountAsync(filter);
+            return await entities.Where(filter).CountAsync();
         }
 
         public async Task<bool> IsExist(Expression<Func<T, bool>> filter)
         {
             return await entities.AnyAsync(filter);
+        }
+
+        public async Task AddRangeAsync(List<T> entity)
+        {
+
+            try
+            {
+                await entities.AddRangeAsync(entity);
+                await Context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<T?> FirstOrDefaultAsync(Expression<Func<T, bool>> filter)
+        {
+            return await entities.FirstOrDefaultAsync(filter);
+        }
+        public async Task<T?> LastOrDefaultAsync(Expression<Func<T, bool>> filter)
+        {
+            return await entities.LastOrDefaultAsync(filter);
         }
     }
 }

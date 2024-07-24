@@ -1,11 +1,11 @@
-﻿using Shop.Domain.Enums;
+﻿using PelicanManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.Dtos.User
+namespace PelicanManagement.Domain.Dtos.User
 {
     public class RegisterUserDto
     {

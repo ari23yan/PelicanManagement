@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Security
+namespace PelicanManagement.Application.Security
 {
     public interface IPasswordHasher
     {

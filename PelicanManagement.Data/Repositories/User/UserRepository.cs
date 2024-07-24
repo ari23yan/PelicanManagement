@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Shop.Data.Context;
-using Shop.Domain.Dtos.Common.ResponseModel;
-using Shop.Domain.Dtos.User;
-using Shop.Domain.Enums;
-using Shop.Domain.Interfaces.Product;
-using Shop.Domain.Interfaces.User;
+using PelicanManagement.Data.Context;
+using PelicanManagement.Domain.Dtos.Common.ResponseModel;
+using PelicanManagement.Domain.Dtos.User;
+using PelicanManagement.Domain.Enums;
+using PelicanManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Shop.Domain.Entities.Account;
-using Shop.Application.Security;
+using PelicanManagement.Domain.Entities.Account;
+using PelicanManagement.Application.Security;
+using System.Reflection;
 
-namespace Shop.Data.Repositories.User
+namespace PelicanManagement.Data.Repositories
 {
-    public class UserRepository : Repository<Shop.Domain.Entities.Account.User>, IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
         private readonly IPasswordHasher _passwordHasher;
         public UserRepository(IPasswordHasher passwordHasher, AppDbContext context) : base(context)
@@ -28,6 +28,26 @@ namespace Shop.Data.Repositories.User
                 .AnyAsync(x=>x.PhoneNumber.Equals(phoneNumber));
         }
 
+        public async Task<User?> GetUserByEmail(string phoneNumber)
+        {
+            return await Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber.Equals(phoneNumber));
+        }
+
+        public async Task<User> GetUserById(string id)
+        {
+            return await Context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id));
+        }
+
+        public async Task<User> GetUserByMobile(string mobile)
+        {
+            return await Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber.Equals(mobile));
+        }
+
+        public async Task<User> GetUserByUsername(string username)
+        {
+            return await Context.Users.FirstOrDefaultAsync(x => x.Username.Equals(username));
+        }
+
         public async Task<ResponseDto<RegisterUserDto>> RegisterUser(RegisterUserDto requset)
         {
             if (await CheckUserExist(requset.PhoneNumber))
@@ -35,7 +55,7 @@ namespace Shop.Data.Repositories.User
                 return new ResponseDto<RegisterUserDto>
                 { IsSuccessFull = false, Message = ErrorsMessages.UserExist };
             }
-            Shop.Domain.Entities.Account.User user = new Domain.Entities.Account.User
+            PelicanManagement.Domain.Entities.Account.User user = new Domain.Entities.Account.User
             {
                 PhoneNumber =  requset.PhoneNumber,
                 Email = requset.Email,
@@ -46,7 +66,6 @@ namespace Shop.Data.Repositories.User
                 LastName = requset.LastName,
             };
             await AddAsync(user);
-            await SaveAsync();
             return new ResponseDto<RegisterUserDto>
             { IsSuccessFull = true, Message = ErrorsMessages.SuccessRegister };
         }

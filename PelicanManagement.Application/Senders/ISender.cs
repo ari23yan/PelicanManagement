@@ -1,11 +1,11 @@
-﻿using Shop.Domain.Dtos.Sender;
+﻿using PelicanManagement.Domain.Dtos.Sender;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Senders
+namespace PelicanManagement.Application.Senders
 {
     public interface ISender
     {

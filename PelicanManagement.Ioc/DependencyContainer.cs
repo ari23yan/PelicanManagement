@@ -1,21 +1,17 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Shop.Domain.Interfaces;
-using Shop.Domain.Interfaces.User;
+using PelicanManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Shop.Data.Repositories;
-using Shop.Data.Repositories.User;
-using Shop.Data.Repositories.Product;
-using Shop.Domain.Interfaces.Product;
-using Shop.Application.Services.Interfaces;
-using Shop.Application.Services.Implementations;
-using Shop.Application.Security;
-using Shop.Application.Senders;
+using PelicanManagement.Data.Repositories;
+using PelicanManagement.Application.Services.Interfaces;
+using PelicanManagement.Application.Services.Implementations;
+using PelicanManagement.Application.Security;
+using PelicanManagement.Application.Senders;
 
-namespace Shop.Ioc
+namespace PelicanManagement.Ioc
 {
     public static class DependencyContainer
     {
@@ -23,8 +19,6 @@ namespace Shop.Ioc
         {
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<ISender, Sender>();

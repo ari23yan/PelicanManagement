@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.Dtos.Common.Pagination
+namespace PelicanManagement.Domain.Dtos.Common.Pagination
 {
     internal class PaginationResponse
     {

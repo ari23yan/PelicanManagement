@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Application.Services.Interfaces
+namespace PelicanManagement.Domain.Dtos.Common
 {
-    public interface IProductService
+    public class GetByIdDto
     {
+        public Guid TargetId { get; set; }
     }
 }

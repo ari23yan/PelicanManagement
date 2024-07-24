@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
-using Shop.Domain.Dtos.User;
-using Shop.Domain.Enums;
+using PelicanManagement.Domain.Dtos.User;
+using PelicanManagement.Domain.Enums;
 
-namespace Shop.Presentation.Validators.User
+namespace PelicanManagement.Presentation.Validators.User
 {
     public class UserValidator:AbstractValidator<RegisterUserDto>
     {

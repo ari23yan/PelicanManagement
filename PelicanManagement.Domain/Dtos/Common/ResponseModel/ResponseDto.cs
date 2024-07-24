@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Shop.Domain.Dtos.Common.ResponseModel
+namespace PelicanManagement.Domain.Dtos.Common.ResponseModel
 {
     public class ResponseDto<T>
     {
