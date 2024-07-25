@@ -30,6 +30,8 @@ namespace PelicanManagement.Domain.Dtos.Common.ResponseModel
         public static string InternalServerError = "اوه، خطای سرور داخلی";
         public static string PhoneNumberAlreadyExist = "شماره تلفن در پایگاه داده موجود است";
         public static string UsernameAlreadyExist = "نام کاربری در پایگاه داده موجود است";
+        public static string EmailAlreadyExist = "ایمیل در پایگاه داده موجود است";
         public static string SmsPanelNotResponding = "پیامک ارسال نشد، خطای سرور داخلی فراپیامک";
+        public static string EmailNotConfirmed = "ایمیل شما تایید نشده است  ،لطفا ایمیل را تایید کنید";
     }
 }

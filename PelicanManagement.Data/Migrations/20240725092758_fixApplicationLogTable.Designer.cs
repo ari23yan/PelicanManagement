@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PelicanManagement.Data.Context;
 
@@ -11,9 +12,11 @@ using PelicanManagement.Data.Context;
 namespace PelicanManagement.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240725092758_fixApplicationLogTable")]
+    partial class fixApplicationLogTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -283,7 +286,7 @@ namespace PelicanManagement.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid>("UserRoleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
@@ -293,7 +296,7 @@ namespace PelicanManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("UserRoleId");
 
                     b.ToTable("Users", "Account");
                 });
@@ -504,13 +507,13 @@ namespace PelicanManagement.Data.Migrations
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Account.User", b =>
                 {
-                    b.HasOne("PelicanManagement.Domain.Entities.Account.Role", "Role")
+                    b.HasOne("PelicanManagement.Domain.Entities.Account.Role", "UserRole")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("UserRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Common.UserActivityLog", b =>

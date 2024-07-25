@@ -11,5 +11,6 @@ namespace PelicanManagement.Application.Senders
     {
         void SendMailForSignUp(SendMailDto request);
         void SendMailForgetPassword(SendMailDto request);
+        Task<bool> ConfirmEmailAddress(SendMailDto request);
     }
 }

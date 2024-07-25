@@ -9,12 +9,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PelicanManagement.Application.Utilities;
+using PelicanManagement.Domain.Dtos.Common.AccessLog;
+using PelicanManagement.Domain.Enums;
 
 namespace PelicanManagement.Application.Services.Implementations
 {
     public class LogService : ILogService
     {
         private protected IRepository<ApplicationLog> _logRepository;
+        private readonly IRepository<UserActivityLog> _usersAccessLogRepository;
+
         public LogService(IRepository<ApplicationLog> repository)
         {
                 _logRepository = repository;    
@@ -26,15 +31,19 @@ namespace PelicanManagement.Application.Services.Implementations
             {
                 ActionName = actionName,
                 ControllerName = controllerName,
-                Exception = ex.ToString(),
+                Exception = ex == null ? null : ex.ToString(),
                 IpAddress = ip,
-                Message = ex.Message,
-                Source = ex.Source,
-                InnerException = ex.InnerException.ToString(),
+                Message = ex.Message == null ? null : ex.Message,
+                Source = ex.Source == null ? null : ex.Source,
+                InnerException = ex.InnerException == null ? null : ex.InnerException.ToString(),
                 Timestamp = DateTime.Now,
                 UserAgent = userAgent,
             };
             await _logRepository.AddAsync(log);
         }
+
+
+       
+
     }
 }

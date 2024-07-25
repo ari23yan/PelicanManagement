@@ -21,7 +21,7 @@ namespace PelicanManagement.Domain.Entities.Common
         [MaxLength(500)]
         public string? Description { get; set; }
         public string? Link { get; set; }
-        public ICollection<Role> RolePermissions { get; set; }
+        public ICollection<RoleMenu> RoleMenus { get; set; }
         public Guid? SubMenuId { get; set; }
     }
 }

@@ -6,14 +6,10 @@ using System.Threading.Tasks;
 
 namespace PelicanManagement.Domain.Enums
 {
-    public enum UserAuthResponse
+    public enum AccessLogType
     {
-        Success,
-        NotFound,
-        WrongPassword,
-        NotAvtive,
-        EmailNotConfirmed,
-        IsDeleted,
-        TooManyTries
+        RoleChange,
+        PermissionChange,
+        MenuChange,
     }
 }

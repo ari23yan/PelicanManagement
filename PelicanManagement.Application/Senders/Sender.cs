@@ -193,6 +193,36 @@ namespace PelicanManagement.Application.Senders
                 throw;
             }
         }
+
+
+
+        public Task<bool> ConfirmEmailAddress(SendMailDto request)
+        {
+            try
+            {
+                var mail = new MailMessage();
+                var SmtpServer = new SmtpClient("smtp.gmail.com");
+                mail.From = new MailAddress("ariyanrahmaniii@gmail.com", "AdminPelican.org");
+                mail.To.Add(request.Email);
+                string password = _configuration["Password"];
+                mail.Subject = "تایید ایمیل پنل مدیریت سامانه پلیکان";
+                mail.Body = $"کد تایید شما :{request.Code}" ;
+                SmtpServer.EnableSsl = true;
+                mail.IsBodyHtml = true;
+                SmtpServer.Port = 587;
+                SmtpServer.Credentials = new System.Net.NetworkCredential("ariyanrahmaniii@gmail.com", password);
+                SmtpServer.Send(mail);
+                return Task.FromResult(true);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
+
+
         public void SendMailForSignUp(SendMailDto request)
         {
             try

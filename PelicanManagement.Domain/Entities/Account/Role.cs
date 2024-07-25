@@ -11,7 +11,7 @@ namespace PelicanManagement.Domain.Entities.Account
 {
     [Table("Roles", Schema = "Account")]
 
-    public class Role   
+    public class Role : BaseEntity
     {
         [MaxLength(128)]
         public string RoleName { get; set; }
@@ -19,7 +19,6 @@ namespace PelicanManagement.Domain.Entities.Account
         public string RoleName_Farsi { get; set; }
         [MaxLength(1024)]
         public string? Description { get; set; }
-
         public ICollection<RolePermission> RolePermissions { get; set; }
         public ICollection<RoleMenu> RoleMenus { get; set; }
     }

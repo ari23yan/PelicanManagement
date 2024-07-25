@@ -43,21 +43,16 @@ namespace PelicanManagement.Application.Utilities
         public static string OtpGenrator()
         {
             int length = 6;
-            // Define characters allowed in the OTP
             const string allowedChars = "0123456789";
 
-            // Create a random number generator
             Random random = new Random();
 
-            // Use StringBuilder to efficiently build the OTP
             StringBuilder otpBuilder = new StringBuilder(length);
 
             for (int i = 0; i < length; i++)
             {
-                // Generate a random index to select a character from allowedChars
                 int index = random.Next(0, allowedChars.Length);
 
-                // Append the selected character to the OTP
                 otpBuilder.Append(allowedChars[index]);
             }
 
@@ -68,9 +63,6 @@ namespace PelicanManagement.Application.Utilities
         {
             if (!httpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             {
-                //return new Guid("14F942EB-161B-4F28-9F04-B5A96A96D19E");// سوپروایزر
-                //return new Guid("55bded22-d3f8-4b04-5440-08dc9faa1a8d");// دکتر
-                return new Guid("E3597C08-046F-43E5-B85B-CA43F54066F6");// مدارک پزشکی
                 return Guid.Empty;
             }
             var user = httpContextAccessor.HttpContext.User;

@@ -13,7 +13,7 @@ namespace PelicanManagement.Domain.Dtos.Common.Pagination
     public class PaginationDto
     {
         public int PageNumber { get; set; } = 1;
-        public int PageSize { get; set; } = 10;
+        public int PageSize { get; set; } = 20;
         public string? Searchkey { get; set; }
         [EnumDataType(typeof(FilterType))]
         public FilterType? FilterType { get; set; }  = Enums.FilterType.Desc;

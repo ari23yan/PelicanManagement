@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PelicanManagement.Domain.Entities.Common
 {
-    [Table("UserActivityLog", Schema = "Common")]
+    [Table("UserActivityLogs", Schema = "Common")]
 
     public class UserActivityLog
     {

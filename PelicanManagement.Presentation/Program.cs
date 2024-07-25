@@ -37,6 +37,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pelican Management", Version = "v1", Description = "Pelican Management Rest Api Services - 2024" });
+    c.EnableAnnotations();
 
     // Include the XML comments from your controllers
     //c.EnableAnnotations();

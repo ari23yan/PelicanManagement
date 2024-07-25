@@ -22,5 +22,24 @@ namespace PelicanManagement.Data.Context
         public DbSet<ApplicationLog> ApplicationLogs  { get; set; }
         public DbSet<UserActivityLog> UserActivityLogs  { get; set; }
         public DbSet<UserActivityLogType> UserActivityLogTypes  { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<RoleMenu>()
+                .HasKey(rm => new { rm.RoleId, rm.MenuId });
+
+            modelBuilder.Entity<RoleMenu>()
+                .HasOne(rm => rm.Role)
+                .WithMany(r => r.RoleMenus)
+                .HasForeignKey(rm => rm.RoleId);
+
+            modelBuilder.Entity<RoleMenu>()
+                .HasOne(rm => rm.Menu)
+                .WithMany(m => m.RoleMenus)
+                .HasForeignKey(rm => rm.MenuId);
+        }
+
     }
 }

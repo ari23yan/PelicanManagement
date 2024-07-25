@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PelicanManagement.Data.Context;
 
@@ -11,9 +12,11 @@ using PelicanManagement.Data.Context;
 namespace PelicanManagement.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240725085257_init")]
+    partial class init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,6 +108,9 @@ namespace PelicanManagement.Data.Migrations
                     b.Property<bool>("IsModified")
                         .HasColumnType("bit");
 
+                    b.Property<Guid?>("MenuId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
@@ -123,15 +129,15 @@ namespace PelicanManagement.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MenuId");
+
                     b.ToTable("Roles", "Account");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Account.RoleMenu", b =>
                 {
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("MenuId")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedBy")
@@ -146,9 +152,6 @@ namespace PelicanManagement.Data.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
@@ -158,15 +161,23 @@ namespace PelicanManagement.Data.Migrations
                     b.Property<bool>("IsModified")
                         .HasColumnType("bit");
 
+                    b.Property<Guid>("MenuId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("ModifiedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("RoleId", "MenuId");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("MenuId");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("RoleMenus", "Account");
                 });
@@ -257,7 +268,7 @@ namespace PelicanManagement.Data.Migrations
                     b.Property<bool>("IsModified")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime?>("LastLoginDate")
+                    b.Property<DateTime>("LastLoginDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("LastName")
@@ -271,6 +282,7 @@ namespace PelicanManagement.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("OtpCode")
+                        .IsRequired()
                         .HasMaxLength(6)
                         .HasColumnType("nvarchar(6)");
 
@@ -283,7 +295,7 @@ namespace PelicanManagement.Data.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("nvarchar(15)");
 
-                    b.Property<Guid>("RoleId")
+                    b.Property<Guid>("UserRoleId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Username")
@@ -293,9 +305,9 @@ namespace PelicanManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RoleId");
+                    b.HasIndex("UserRoleId");
 
-                    b.ToTable("Users", "Account");
+                    b.ToTable("User", "Account");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Common.ApplicationLog", b =>
@@ -305,35 +317,43 @@ namespace PelicanManagement.Data.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ActionName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ControllerName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Exception")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("InnerException")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Message")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Source")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UserAgent")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("ApplicationLogs", "Common");
+                    b.ToTable("ApplicationLog", "Common");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Common.Menu", b =>
@@ -439,7 +459,7 @@ namespace PelicanManagement.Data.Migrations
 
                     b.HasIndex("UserActivityLogTypeId");
 
-                    b.ToTable("UserActivityLogs", "Common");
+                    b.ToTable("UserActivityLog", "Common");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Common.UserActivityLogType", b =>
@@ -461,13 +481,20 @@ namespace PelicanManagement.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("UserActivityLogTypes", "Common");
+                    b.ToTable("UserActivityLogType", "Common");
+                });
+
+            modelBuilder.Entity("PelicanManagement.Domain.Entities.Account.Role", b =>
+                {
+                    b.HasOne("PelicanManagement.Domain.Entities.Common.Menu", null)
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("MenuId");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Account.RoleMenu", b =>
                 {
                     b.HasOne("PelicanManagement.Domain.Entities.Common.Menu", "Menu")
-                        .WithMany("RoleMenus")
+                        .WithMany()
                         .HasForeignKey("MenuId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -504,13 +531,13 @@ namespace PelicanManagement.Data.Migrations
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Account.User", b =>
                 {
-                    b.HasOne("PelicanManagement.Domain.Entities.Account.Role", "Role")
+                    b.HasOne("PelicanManagement.Domain.Entities.Account.Role", "UserRole")
                         .WithMany()
-                        .HasForeignKey("RoleId")
+                        .HasForeignKey("UserRoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("UserRole");
                 });
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Common.UserActivityLog", b =>
@@ -538,7 +565,7 @@ namespace PelicanManagement.Data.Migrations
 
             modelBuilder.Entity("PelicanManagement.Domain.Entities.Common.Menu", b =>
                 {
-                    b.Navigation("RoleMenus");
+                    b.Navigation("RolePermissions");
                 });
 #pragma warning restore 612, 618
         }

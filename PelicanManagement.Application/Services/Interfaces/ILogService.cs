@@ -1,4 +1,6 @@
-﻿using System;
+﻿using PelicanManagement.Domain.Dtos.Common.AccessLog;
+using PelicanManagement.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
