@@ -225,8 +225,8 @@ namespace PelicanManagement.Presentation.Controllers
 
         [HttpPost]
         //[PermissionChecker(Permission = PermissionType.Admin_GetRoleForUpdateUser)]
-        [Route("role/get")]
-        public async Task<IActionResult> GetRole(GetByIdDto request)
+        [Route("role/get-role-menu")]
+        public async Task<IActionResult> GetRoleMenu(GetByIdDto request)
         {
             try
             {
@@ -250,5 +250,6 @@ namespace PelicanManagement.Presentation.Controllers
                 return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
             }
         }
+        
     }
 }

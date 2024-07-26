@@ -14,10 +14,16 @@ namespace PelicanManagement.Domain.Dtos.User
         public Guid Id { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
-        public string Username { get; set; }
+        public string? FullName
+        {
+            get
+            {
+                return (FirstName ?? string.Empty) + " " + (LastName ?? string.Empty);
+            }
+        }
         public string? Email { get; set; }
-        public Guid UserRoleId { get; set; }
+        public Guid RoleId { get; set; }
         public string Token { get; set; }
-        public GetRoleMenuDto RoleMenus { get; set; }
+        //public GetRoleMenuDto RoleMenus { get; set; }
     }
 }

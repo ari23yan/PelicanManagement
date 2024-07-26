@@ -59,7 +59,7 @@ namespace PelicanManagement.Presentation.Controllers
                         var claims = new List<Claim>
                         {
                          new Claim(ClaimTypes.NameIdentifier,result.user.Id.ToString()),
-                         new Claim(ClaimTypes.Role,result.user.UserRoleId.ToString())
+                         new Claim(ClaimTypes.Role,result.user.RoleId.ToString())
                         };
                              var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:IssuerSigningKey"]));
                              var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

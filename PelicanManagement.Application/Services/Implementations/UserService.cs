@@ -93,8 +93,8 @@ namespace PelicanManagement.Application.Services.Implementations
             user.LastLoginDate = DateTime.Now;
             await _userRepository.UpdateAsync(user);
             var mappedUser = _mapper.Map<UserDto>(user);
-            var menu = await GetRoleMenusByRoleId(user.RoleId);
-            mappedUser.RoleMenus = menu.Data;
+            //var menu = await GetRoleMenusByRoleId(user.RoleId);
+            //mappedUser.RoleMenus = menu.Data;
             return (UserAuthResponse.Success, mappedUser);
         }
 
