@@ -67,7 +67,7 @@ namespace PelicanManagement.Data.Repositories
         }
         public async Task<IEnumerable<Menu>> GetMenusList()
         {
-            return await Context.Menus.Where(x => !x.IsDeleted && x.IsActive).ToListAsync();
+            return await Context.Menus.Where(x => !x.IsDeleted && x.IsActive).OrderBy(x => x.CreatedDate).ToListAsync();
         }
         public async Task<IEnumerable<Role>> GetRolesList()
         {
