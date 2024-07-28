@@ -115,7 +115,7 @@ namespace PelicanManagement.Data.Repositories
             ListResponseDto<User> responseDto = new ListResponseDto<User>();
 
             var skipCount = (paginationRequest.PageNumber - 1) * paginationRequest.PageSize;
-            IQueryable<User> query = Context.Users.Include(x => x.Role).Where(u => !u.IsDeleted && u.IsActive);
+            IQueryable<User> query = Context.Users.Include(x => x.Role).Where(u => !u.IsDeleted);
 
 
             if (!string.IsNullOrWhiteSpace(paginationRequest.Searchkey))
