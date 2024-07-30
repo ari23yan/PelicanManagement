@@ -162,6 +162,37 @@ namespace PelicanManagement.Presentation.Controllers
 
 
         [HttpPut]
+        //[PermissionChecker(Permission = PermissionType.Admin_DeleteUser)]
+        [Route("user/toggle-active-status")]
+
+        public async Task<IActionResult> ToggleActiveStatus(GetByIdDto request)
+        {
+            try
+            {
+                var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
+                var result = await _userService.ToggleActiveStatusByUserId(request.TargetId, currentUser);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+
+        [HttpPut]
         ////[PermissionChecker(Permission = PermissionType.Admin_UpdateUser)]
         [Route("user/update")]
         ///

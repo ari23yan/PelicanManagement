@@ -166,6 +166,20 @@ namespace PelicanManagement.Application.Services.Implementations
             await _userRepository.UpdateAsync(user);
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.Success };
         }
+        public async Task<ResponseDto<bool>> ToggleActiveStatusByUserId(Guid userId, Guid operatorId)
+        {
+            var user = await _userRepository.GetActiveORDeActiveUserById(userId);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.Faild };
+            }
+
+            user.IsActive = user.IsActive == false ? true : false;  
+            user.ModifiedDate = DateTime.UtcNow;
+            user.ModifiedBy = operatorId;
+            await _userRepository.UpdateAsync(user);
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.Success };
+        }
 
         public async Task<ResponseDto<bool>> UpdateUserByUserId(Guid userId, UpdateUserDto request, Guid operatorId)
         {

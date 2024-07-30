@@ -39,6 +39,10 @@ namespace PelicanManagement.Data.Repositories
         {
             return await Context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted && x.IsActive);
         }
+        public async Task<User?> GetActiveORDeActiveUserById(Guid id)
+        {
+            return await Context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted);
+        }
         public async Task<Role?> GetRoleWithDetailById(Guid roleId)
         {
             return await Context.Roles

@@ -23,6 +23,7 @@ namespace PelicanManagement.Domain.Interfaces
         Task<User> GetUserByUsername(string username);
         Task<User?> GetUserDetailById(Guid userId);
         Task<User> GetUserById(Guid id);
+        Task<User> GetActiveORDeActiveUserById(Guid id);
         Task<IEnumerable<Role>> GetRolesList();
         Task<Role> GetRoleById(Guid roleId);
 

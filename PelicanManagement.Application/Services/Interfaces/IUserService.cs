@@ -21,6 +21,7 @@ namespace PelicanManagement.Application.Services.Interfaces
         Task<ResponseDto<IEnumerable<UsersListDto>>> GetPaginatedUsersList(PaginationDto request);
         Task<ResponseDto<AddUserDto>> AddUser(AddUserDto requset, Guid operatorId);
         Task<ResponseDto<bool>> DeleteUserByUserId(Guid userId, Guid operatorId);
+        Task<ResponseDto<bool>> ToggleActiveStatusByUserId(Guid userId, Guid operatorId);
         Task<ResponseDto<UserDetailDto>> GetUserDetailByUserId(Guid userId);
         Task<ResponseDto<IEnumerable<GetRolesListDto>>> GetRolesList();
         Task<ResponseDto<bool>> UpdateUserByUserId(Guid userId, UpdateUserDto request, Guid operatorId);
