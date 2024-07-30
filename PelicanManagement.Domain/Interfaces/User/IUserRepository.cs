@@ -29,6 +29,7 @@ namespace PelicanManagement.Domain.Interfaces
 
         Task<Role> GetRoleWithDetailById(Guid roleId);
         Task<IEnumerable<Permission>> GetAllPermissions();
+        Task<IEnumerable<Permission>> GetRolePermissions(Guid roleId);
         Task<IEnumerable<Menu>> GetAllMenus();
         Task<IEnumerable<Menu>> GetMenusList();
         Task<ListResponseDto<User>> GetPaginatedUsersList(PaginationDto request);

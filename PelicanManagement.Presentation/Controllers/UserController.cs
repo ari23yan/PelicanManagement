@@ -196,7 +196,7 @@ namespace PelicanManagement.Presentation.Controllers
         ////[PermissionChecker(Permission = PermissionType.Admin_UpdateUser)]
         [Route("user/update")]
         ///
-        public async Task<IActionResult> Update(Guid userId, UpdateUserDto request)
+        public async Task<IActionResult> Update([FromQuery]Guid userId,[FromBody] UpdateUserDto request)
         {
             try
             {
@@ -226,12 +226,41 @@ namespace PelicanManagement.Presentation.Controllers
 
         [HttpGet]
         //[PermissionChecker(Permission = PermissionType.Admin_GetRoleListForUpdateUser)]
-        [Route("user/get-role-list")]
+        [Route("role/get-list")]
         public async Task<IActionResult> GetRolesList()
         {
             try
             {
                 var result = await _userService.GetRolesList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+
+        [HttpPost]
+        //[PermissionChecker(Permission = PermissionType.Admin_GetRoleListForUpdateUser)]
+        [Route("role/get-role-permissions")]
+        public async Task<IActionResult> GetRolePermissions(GetByIdDto request)
+        {
+            try
+            {
+                var result = await _userService.GetRolePermissionsByRoleId(request);
 
                 return Ok(result);
             }

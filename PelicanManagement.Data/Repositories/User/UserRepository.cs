@@ -64,6 +64,15 @@ namespace PelicanManagement.Data.Repositories
                 .FirstOrDefaultAsync(u => u.Id.Equals(userId) && !u.IsDeleted && u.IsActive);
         }
 
+        public async Task<IEnumerable<Permission>> GetRolePermissions(Guid roleId)
+        {
+               return await Context.RolePermissions
+                .Include(x => x.Permission)
+                .Where(u => u.RoleId.Equals(roleId) && !u.IsDeleted && u.IsActive)
+                .Select(x => x.Permission)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Permission>> GetAllPermissions()
         {
             return await Context.Permissions.Where(u => !u.IsDeleted && u.IsActive)
@@ -98,17 +107,17 @@ namespace PelicanManagement.Data.Repositories
 
         public async Task<bool> CheckUserExistByPhoneMumber(string phoneNumber)
         {
-            return await Context.Users.AnyAsync(x => x.PhoneNumber.Equals(phoneNumber) && !x.IsDeleted && x.IsActive);
+            return await Context.Users.AnyAsync(x => x.PhoneNumber.Equals(phoneNumber) && !x.IsDeleted);
         }
 
         public async Task<bool> CheckUserExistByUsername(string username)
         {
-            return await Context.Users.AnyAsync(x => x.Username.Equals(username) && !x.IsDeleted && x.IsActive);
+            return await Context.Users.AnyAsync(x => x.Username.Equals(username) && !x.IsDeleted);
         }
 
         public async Task<bool> CheckUserExistByEmail(string email)
         {
-            return await Context.Users.AnyAsync(x => x.Email.Equals(email) && !x.IsDeleted && x.IsActive);
+            return await Context.Users.AnyAsync(x => x.Email.Equals(email) && !x.IsDeleted);
         }
         public async Task<User?> GetUserByUsername(string username)
         {
@@ -143,7 +152,7 @@ namespace PelicanManagement.Data.Repositories
             if (await CheckUserExist(requset.PhoneNumber))
             {
                 return new ResponseDto<RegisterUserDto>
-                { IsSuccessFull = false, Message = ErrorsMessages.UserExist };
+                { IsSuccessFull = false, Message = ErrorsMessages.UserAlreadyExists };
             }
             PelicanManagement.Domain.Entities.Account.User user = new Domain.Entities.Account.User
             {
@@ -157,7 +166,7 @@ namespace PelicanManagement.Data.Repositories
             };
             await AddAsync(user);
             return new ResponseDto<RegisterUserDto>
-            { IsSuccessFull = true, Message = ErrorsMessages.SuccessRegister };
+            { IsSuccessFull = true, Message = ErrorsMessages.SuccessfulRegistration };
         }
     }
 }

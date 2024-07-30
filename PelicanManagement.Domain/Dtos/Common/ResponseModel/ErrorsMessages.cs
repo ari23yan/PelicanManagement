@@ -8,30 +8,31 @@ namespace PelicanManagement.Domain.Dtos.Common.ResponseModel
 {
     public class ErrorsMessages
     {
-        public static string FaildLogin = "خطا، لطفاً دوباره تلاش کنید";
-        public static string BadApiResponse = "خطا، پاسخ API نامعتبر است";
-        public static string SuccessLogin = "ورود موفقیت‌آمیز";
-        public static string UserORPasswrodIsWrong = "نام کاربری یا رمز عبور اشتباه است";
-        public static string NotAuthenticated = "کاربر احراز هویت نشده است";
-        public static string Authenticated = "کاربر احراز هویت شده است";
-        public static string NotFound = "موردی یافت نشد";
-        public static string SuccessRegister = "ثبت‌نام موفقیت‌آمیز بود";
-        public static string UserNotfound = "کاربر یافت نشد، لطفاً دوباره تلاش کنید";
-        public static string NotActive = "حساب کاربری غیرفعال است";
-        public static string PassswordAndConfrimPassswordIsnotEqueal = "رمز عبور و تکرار آن مطابقت ندارند، لطفاً دوباره تلاش کنید";
-        public static string UserExist = "کاربری با این مشخصات قبلاً وجود دارد";
-        public static string Exist = "رکوردی با این مشخصات قبلاً وجود دارد";
-        public static string NullInputs = "مقادیر ورودی خالی هستند";
-        public static string Success = "عملیات موفقیت‌آمیز بود";
-        public static string Faild = "عملیات ناموفق بود";
-        public static string OtpIncorrect = "کد تایید اشتباه است";
-        public static string EmailSend = "کد تایید به ایمیل شما ارسال شد";
-        public static string PermissionDenied = "دسترسی رد شد";
-        public static string InternalServerError = "اوه، خطای سرور داخلی";
-        public static string PhoneNumberAlreadyExist = "شماره تلفن در پایگاه داده موجود است";
-        public static string UsernameAlreadyExist = "نام کاربری در پایگاه داده موجود است";
-        public static string EmailAlreadyExist = "ایمیل در پایگاه داده موجود است";
-        public static string SmsPanelNotResponding = "پیامک ارسال نشد، خطای سرور داخلی فراپیامک";
-        public static string EmailNotConfirmed = "ایمیل شما تایید نشده است  ،لطفا ایمیل را تایید کنید";
+        public static string FailedLogin = "ورود ناموفق، لطفاً مجدداً تلاش فرمایید.";
+        public static string InvalidApiResponse = "خطا، پاسخ API معتبر نمی‌باشد.";
+        public static string SuccessfulLogin = "ورود با موفقیت انجام شد.";
+        public static string InvalidUsernameOrPassword = "نام کاربری یا رمز عبور نادرست است.";
+        public static string NotAuthenticated = "کاربر احراز هویت نشده است.";
+        public static string Authenticated = "کاربر با موفقیت احراز هویت شد.";
+        public static string NotFound = "موردی یافت نشد.";
+        public static string SuccessfulRegistration = "ثبت‌نام با موفقیت انجام شد.";
+        public static string UserNotFound = "کاربر یافت نشد. لطفاً مجدداً تلاش فرمایید.";
+        public static string AccountInactive = "حساب کاربری غیرفعال است.";
+        public static string PasswordsDoNotMatch = "رمز عبور و تکرار آن مطابقت ندارند. لطفاً مجدداً بررسی فرمایید.";
+        public static string UserAlreadyExists = "نام کاربری انتخابی قبلاً ثبت شده است. لطفاً نام کاربری متفاوتی وارد کنید.";
+        public static string RecordAlreadyExists = "رکوردی با این مشخصات از قبل وجود دارد. لطفاً اطلاعات را بررسی نمایید.";
+        public static string NullInputs = "مقادیر ورودی نمی‌توانند خالی باشند.";
+        public static string OperationSuccessful = "عملیات با موفقیت انجام شد.";
+        public static string OperationFailed = "عملیات با شکست مواجه شد.";
+        public static string IncorrectOtp = "کد تأیید نادرست است.";
+        public static string OtpSent = "کد تأیید به ایمیل شما ارسال شد.";
+        public static string PermissionDenied = "دسترسی رد شد.";
+        public static string InternalServerError = "خطای داخلی سرور.";
+        public static string PhoneNumberAlreadyExists = "شماره تلفن وارد شده قبلاً در سیستم ثبت شده است.";
+        public static string UsernameAlreadyExists = "نام کاربری انتخابی قبلاً ثبت شده است. لطفاً نام کاربری متفاوتی وارد کنید.";
+        public static string EmailAlreadyExists = "ایمیل وارد شده قبلاً در سیستم ثبت شده است.";
+        public static string SmsPanelNotResponding = "ارسال پیامک با خطا مواجه شد. لطفاً مجدداً تلاش فرمایید.";
+        public static string EmailNotConfirmed = "ایمیل شما تأیید نشده است. لطفاً ایمیل خود را تأیید فرمایید.";
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PelicanManagement.Domain.Dtos.Account;
+using PelicanManagement.Domain.Dtos.Common;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
 using PelicanManagement.Domain.Dtos.Permissions;
@@ -24,8 +25,7 @@ namespace PelicanManagement.Application.Services.Interfaces
         Task<ResponseDto<bool>> ToggleActiveStatusByUserId(Guid userId, Guid operatorId);
         Task<ResponseDto<UserDetailDto>> GetUserDetailByUserId(Guid userId);
         Task<ResponseDto<IEnumerable<GetRolesListDto>>> GetRolesList();
+        Task<ResponseDto<IEnumerable<PermissionsDto>>> GetRolePermissionsByRoleId(GetByIdDto dto);
         Task<ResponseDto<bool>> UpdateUserByUserId(Guid userId, UpdateUserDto request, Guid operatorId);
-
-
     }
 }

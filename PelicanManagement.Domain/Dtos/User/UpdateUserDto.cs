@@ -14,7 +14,6 @@ namespace PelicanManagement.Domain.Dtos.User
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
         public bool? EmailConfirmed { get; set; }
-        public bool? IsActive { get; set; }
         public Guid? RoleId { get; set; }
     }
 }

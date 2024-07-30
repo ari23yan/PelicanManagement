@@ -37,7 +37,7 @@ namespace PelicanManagement.Presentation.Profiles
 
             CreateMap<UpdateUserDto, User>()
                 .ForMember(dest => dest.ModifiedDate, opt => opt.MapFrom(src => DateTime.Now))
-                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom((src, dest) => src.IsActive != null ? src.IsActive : dest.IsActive))
+                 .ForMember(dest => dest.IsActive, opt => opt.Ignore())
                  .ForMember(dest => dest.RoleId, opt => opt.MapFrom((src, dest) => src.RoleId != null ? src.RoleId : dest.RoleId))
                  .ForMember(dest => dest.IsDeleted, opt => opt.Ignore())
 

@@ -47,13 +47,13 @@ namespace PelicanManagement.Presentation.Controllers
                 switch (result.Result)
                 {
                     case UserAuthResponse.WrongPassword:
-                        return Unauthorized(new ResponseDto<bool> { IsSuccessFull = false, Data = false, Message = ErrorsMessages.UserORPasswrodIsWrong });
+                        return Unauthorized(new ResponseDto<bool> { IsSuccessFull = false, Data = false, Message = ErrorsMessages.InvalidUsernameOrPassword });
                     case UserAuthResponse.NotAvtive:
-                        return Unauthorized(new ResponseDto<string> { IsSuccessFull = false, Data = null, Message = ErrorsMessages.NotActive });
+                        return Unauthorized(new ResponseDto<string> { IsSuccessFull = false, Data = null, Message = ErrorsMessages.AccountInactive });
                     case UserAuthResponse.NotFound:
-                        return Unauthorized(new ResponseDto<bool> { IsSuccessFull = false, Data = false, Message = ErrorsMessages.UserNotfound });
+                        return Unauthorized(new ResponseDto<bool> { IsSuccessFull = false, Data = false, Message = ErrorsMessages.NotFound });
                     case UserAuthResponse.EmailNotConfirmed:
-                        return Unauthorized(new ResponseDto<string> { IsSuccessFull = false, Data = result.user.Email, Message = ErrorsMessages.UserNotfound });
+                        return Unauthorized(new ResponseDto<string> { IsSuccessFull = false, Data = result.user.Email, Message = ErrorsMessages.UserNotFound });
                     case UserAuthResponse.Success:
 
                         var claims = new List<Claim>
@@ -72,9 +72,9 @@ namespace PelicanManagement.Presentation.Controllers
                         );
                         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
                         result.user.Token = tokenString;
-                        return Ok(new ResponseDto<UserDto> { IsSuccessFull = true, Data = result.user, Message = ErrorsMessages.SuccessLogin });
+                        return Ok(new ResponseDto<UserDto> { IsSuccessFull = true, Data = result.user, Message = ErrorsMessages.SuccessfulLogin });
                     default:
-                        return BadRequest(new ResponseDto<bool> { IsSuccessFull = false, Data = false, Message = ErrorsMessages.Faild });
+                        return BadRequest(new ResponseDto<bool> { IsSuccessFull = false, Data = false, Message = ErrorsMessages.FailedLogin });
                 }
             }
             catch (Exception ex)
