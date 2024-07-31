@@ -14,7 +14,7 @@ namespace PelicanManagement.Presentation.Profiles
             CreateMap<Menu, RoleMenusDto>().ReverseMap();
 
             CreateMap<Role, RoleMenusDto>().ReverseMap();
-            CreateMap<Role, GetRoleMenuDto>().ReverseMap();
+            CreateMap<Role, RoleMenuDto>().ReverseMap();
 
             CreateMap<Role, RolesListDto>().ReverseMap();
 

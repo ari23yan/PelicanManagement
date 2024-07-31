@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PelicanManagement.Domain.Dtos.Role
 {
-    public class GetRoleMenuDto
+    public class RoleMenuDto
     {
         public Guid Id { get; set; }
         public string RoleName { get; set; }

@@ -33,20 +33,20 @@ namespace PelicanManagement.Application.Services.Implementations
             _mapper = mapper;
             _logService = logService;
         }
-        public async Task<ResponseDto<GetRoleMenuDto>> GetRoleMenusByRoleId(Guid roleId)
+        public async Task<ResponseDto<RoleMenuDto>> GetRoleMenusByRoleId(Guid roleId)
         {
             var role = await _roleRepository.GetRoleWithDetailById(roleId);
             if (role == null)
             {
-                return new ResponseDto<GetRoleMenuDto> { IsSuccessFull = false, Message = ErrorsMessages.NotFound, Status = "NotFound" };
+                return new ResponseDto<RoleMenuDto> { IsSuccessFull = false, Message = ErrorsMessages.NotFound, Status = "NotFound" };
             }
             var allPermissions = await _roleRepository.GetAllPermissions();
             var allMenus = await _roleRepository.GetMenusList();
             var userRolemenuIds = role.RoleMenus.Select(x => x.MenuId).ToList();
             var roleMenu = await GetMenus(userRolemenuIds, allMenus);
-            var roleDetailDto = _mapper.Map<GetRoleMenuDto>(role);
+            var roleDetailDto = _mapper.Map<RoleMenuDto>(role);
             roleDetailDto.Menus = roleMenu;
-            return new ResponseDto<GetRoleMenuDto> { IsSuccessFull = true, Data = roleDetailDto, Message = ErrorsMessages.OperationSuccessful, Status = "SuccessFull" };
+            return new ResponseDto<RoleMenuDto> { IsSuccessFull = true, Data = roleDetailDto, Message = ErrorsMessages.OperationSuccessful, Status = "SuccessFull" };
         }
         public async Task<ResponseDto<IEnumerable<RolesListDto>>> GetRolesList()
         {

@@ -24,6 +24,6 @@ namespace PelicanManagement.Domain.Dtos.User
         public string? Email { get; set; }
         public Guid RoleId { get; set; }
         public string Token { get; set; }
-        //public GetRoleMenuDto RoleMenus { get; set; }
+        //public RoleMenuDto RoleMenus { get; set; }
     }
 }
