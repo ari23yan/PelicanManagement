@@ -29,12 +29,10 @@ namespace PelicanManagement.Data.Repositories
             return await Context.Users
                  .AnyAsync(x => x.PhoneNumber.Equals(phoneNumber) && !x.IsDeleted && x.IsActive);
         }
-
         public async Task<User?> GetUserByEmail(string phoneNumber)
         {
             return await Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber.Equals(phoneNumber) && !x.IsDeleted && x.IsActive);
         }
-
         public async Task<User?> GetUserById(Guid id)
         {
             return await Context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted && x.IsActive);
@@ -43,16 +41,6 @@ namespace PelicanManagement.Data.Repositories
         {
             return await Context.Users.FirstOrDefaultAsync(x => x.Id.Equals(id) && !x.IsDeleted);
         }
-        public async Task<Role?> GetRoleWithDetailById(Guid roleId)
-        {
-            return await Context.Roles
-            .Include(u => u.RoleMenus)
-            .Include(u => u.RolePermissions)
-            .ThenInclude(rp => rp.Permission)
-            .IgnoreAutoIncludes()
-            .FirstOrDefaultAsync(u => u.Id.Equals(roleId) && !u.IsDeleted && u.IsActive);
-        }
-
         public async Task<User?> GetUserDetailById(Guid userId)
         {
             return await Context.Users
@@ -63,58 +51,22 @@ namespace PelicanManagement.Data.Repositories
                 .IgnoreAutoIncludes()
                 .FirstOrDefaultAsync(u => u.Id.Equals(userId) && !u.IsDeleted && u.IsActive);
         }
-
-        public async Task<IEnumerable<Permission>> GetRolePermissions(Guid roleId)
+        public async Task<bool> CheckUserHavePermission(Guid roleId, Guid permissionId)
         {
-               return await Context.RolePermissions
-                .Include(x => x.Permission)
-                .Where(u => u.RoleId.Equals(roleId) && !u.IsDeleted && u.IsActive)
-                .Select(x => x.Permission)
-                .ToListAsync();
+            return await Context.RolePermissions.AnyAsync(x => x.RoleId.Equals(roleId) && x.PermissionId.Equals(permissionId));
         }
-
-        public async Task<IEnumerable<Permission>> GetAllPermissions()
-        {
-            return await Context.Permissions.Where(u => !u.IsDeleted && u.IsActive)
-           .ToListAsync();
-        }
-        public async Task<IEnumerable<Menu>> GetMenusList()
-        {
-            return await Context.Menus.Where(x => !x.IsDeleted && x.IsActive).OrderBy(x => x.CreatedDate).ToListAsync();
-        }
-        public async Task<IEnumerable<Role>> GetRolesList()
-        {
-            return await Context.Roles.Where(x => !x.IsDeleted && x.IsActive).ToListAsync();
-        }
-
-        public async Task<Role?> GetRoleById(Guid roleId)
-        {
-            return await Context.Roles.FirstOrDefaultAsync(u => u.Id.Equals(roleId) && !u.IsDeleted && u.IsActive);
-        }
-
-
-        public async Task<IEnumerable<Menu>> GetAllMenus()
-        {
-            return await Context.Menus
-            .Where(u => !u.IsDeleted && u.IsActive)
-            .ToListAsync();
-        }
-
         public async Task<User?> GetUserByMobile(string mobile)
         {
             return await Context.Users.FirstOrDefaultAsync(x => x.PhoneNumber.Equals(mobile));
         }
-
         public async Task<bool> CheckUserExistByPhoneMumber(string phoneNumber)
         {
             return await Context.Users.AnyAsync(x => x.PhoneNumber.Equals(phoneNumber) && !x.IsDeleted);
         }
-
         public async Task<bool> CheckUserExistByUsername(string username)
         {
             return await Context.Users.AnyAsync(x => x.Username.Equals(username) && !x.IsDeleted);
         }
-
         public async Task<bool> CheckUserExistByEmail(string email)
         {
             return await Context.Users.AnyAsync(x => x.Email.Equals(email) && !x.IsDeleted);
@@ -145,28 +97,6 @@ namespace PelicanManagement.Data.Repositories
             var pagedQuery = query.Skip(skipCount).Take(paginationRequest.PageSize);
             responseDto.List = await pagedQuery.ToListAsync();
             return responseDto;
-        }
-
-        public async Task<ResponseDto<RegisterUserDto>> RegisterUser(RegisterUserDto requset)
-        {
-            if (await CheckUserExist(requset.PhoneNumber))
-            {
-                return new ResponseDto<RegisterUserDto>
-                { IsSuccessFull = false, Message = ErrorsMessages.UserAlreadyExists };
-            }
-            PelicanManagement.Domain.Entities.Account.User user = new Domain.Entities.Account.User
-            {
-                PhoneNumber = requset.PhoneNumber,
-                Email = requset.Email,
-                Username = requset.PhoneNumber,
-                //UserRoleId = 2,
-                Password = _passwordHasher.EncodePasswordMd5(requset.Password),
-                FirstName = requset.FirstName,
-                LastName = requset.LastName,
-            };
-            await AddAsync(user);
-            return new ResponseDto<RegisterUserDto>
-            { IsSuccessFull = true, Message = ErrorsMessages.SuccessfulRegistration };
         }
     }
 }

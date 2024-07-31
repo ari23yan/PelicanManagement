@@ -24,17 +24,8 @@ namespace PelicanManagement.Domain.Interfaces
         Task<User?> GetUserDetailById(Guid userId);
         Task<User> GetUserById(Guid id);
         Task<User> GetActiveORDeActiveUserById(Guid id);
-        Task<IEnumerable<Role>> GetRolesList();
-        Task<Role> GetRoleById(Guid roleId);
-
-        Task<Role> GetRoleWithDetailById(Guid roleId);
-        Task<IEnumerable<Permission>> GetAllPermissions();
-        Task<IEnumerable<Permission>> GetRolePermissions(Guid roleId);
-        Task<IEnumerable<Menu>> GetAllMenus();
-        Task<IEnumerable<Menu>> GetMenusList();
+        Task<bool> CheckUserHavePermission(Guid roleId, Guid permissionId);
         Task<ListResponseDto<User>> GetPaginatedUsersList(PaginationDto request);
 
-
-        Task<ResponseDto<RegisterUserDto>> RegisterUser(RegisterUserDto requset);
     }
 }

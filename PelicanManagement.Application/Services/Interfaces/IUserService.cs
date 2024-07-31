@@ -18,14 +18,12 @@ namespace PelicanManagement.Application.Services.Interfaces
     public interface IUserService
     {
         Task<(UserAuthResponse Result, UserDto? user)> LoginUser(AuthenticateDto input);
-        Task<ResponseDto<GetRoleMenuDto>> GetRoleMenusByRoleId(Guid roleId);
+        Task<bool> CheckUserHavePermission(Guid roleId, Guid permissionId);
         Task<ResponseDto<IEnumerable<UsersListDto>>> GetPaginatedUsersList(PaginationDto request);
-        Task<ResponseDto<AddUserDto>> AddUser(AddUserDto requset, Guid operatorId);
+        Task<ResponseDto<bool>> AddUser(AddUserDto requset, Guid operatorId);
         Task<ResponseDto<bool>> DeleteUserByUserId(Guid userId, Guid operatorId);
         Task<ResponseDto<bool>> ToggleActiveStatusByUserId(Guid userId, Guid operatorId);
         Task<ResponseDto<UserDetailDto>> GetUserDetailByUserId(Guid userId);
-        Task<ResponseDto<IEnumerable<GetRolesListDto>>> GetRolesList();
-        Task<ResponseDto<IEnumerable<PermissionsDto>>> GetRolePermissionsByRoleId(GetByIdDto dto);
-        Task<ResponseDto<bool>> UpdateUserByUserId(Guid userId, UpdateUserDto request, Guid operatorId);
+        Task<ResponseDto<bool>> UpdateUser(Guid userId, UpdateUserDto request, Guid operatorId);
     }
 }

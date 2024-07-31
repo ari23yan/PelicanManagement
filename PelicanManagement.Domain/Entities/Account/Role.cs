@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 namespace PelicanManagement.Domain.Entities.Account
 {
     [Table("Roles", Schema = "Account")]
-
     public class Role : BaseEntity
     {
         [MaxLength(128)]

@@ -1,49 +1,44 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using PelicanManagement.Application.Services.Implementations;
 using PelicanManagement.Application.Services.Interfaces;
 using PelicanManagement.Application.Utilities;
-using PelicanManagement.Domain.Dtos.Account;
 using PelicanManagement.Domain.Dtos.Common;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
+using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Dtos.User;
 using PelicanManagement.Domain.Enums;
 using PelicanManagement.Presentation.Controllers.Common;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace PelicanManagement.Presentation.Controllers
 {
-    public class UserController : BaseController
+    public class RoleController : BaseController
     {
-        private readonly IUserService _userService;
+
+        private readonly IRoleService _roleService;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogService _logService;
 
-        public UserController(IUserService userService, ILogService logService,
-        IHttpContextAccessor httpContextAccessor, IConfiguration configuration
-        )
+        public RoleController(ILogService logService,
+        IHttpContextAccessor httpContextAccessor, IRoleService roleService, IConfiguration configuration)
         {
-            _userService = userService;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
             _logService = logService;
+            _roleService = roleService;
         }
 
-       
         [HttpGet]
-        [PermissionChecker(Permission = PermissionType.GetUserList)]
-        [Route("user/list")]
+        [PermissionChecker(Permission = PermissionType.GetRoleList)]
+        [Route("role/list")]
         public async Task<IActionResult> List([FromQuery] PaginationDto request)
         {
             try
             {
-                var result = await _userService.GetPaginatedUsersList(request);
+                var result = await _roleService.GetPaginatedRolesList(request);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -65,42 +60,14 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpPost]
-        [Route("user/get")]
-        [PermissionChecker(Permission = PermissionType.GetUser)]
-        public async Task<IActionResult> Get(GetByIdDto request)
-        {
-            try
-            {
-                var result = await _userService.GetUserDetailByUserId(request.TargetId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                #region Inserting Log 
-                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
-                {
-
-                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
-                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-                    var routeData = ControllerContext.RouteData;
-                    var controllerName = routeData.Values["controller"]?.ToString();
-                    var actionName = routeData.Values["action"]?.ToString();
-                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
-                }
-                #endregion
-                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
-            }
-        }
-
-        [HttpPost]
-        [PermissionChecker(Permission = PermissionType.AddUser)]
-        [Route("user/add")]
-        public async Task<IActionResult> Add([FromBody]AddUserDto request)
+        [PermissionChecker(Permission = PermissionType.AddRole)]
+        [Route("role/add")]
+        public async Task<IActionResult> Add([FromBody] AddRoleDto request)
         {
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _userService.AddUser(request, currentUser);
+                var result = await _roleService.AddRole(request, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -122,14 +89,14 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpDelete]
-        [PermissionChecker(Permission = PermissionType.DeleteUser)]
-        [Route("user/delete")]
+        [PermissionChecker(Permission = PermissionType.DeleteRole)]
+        [Route("role/delete")]
         public async Task<IActionResult> Delete(GetByIdDto request)
         {
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _userService.DeleteUserByUserId(request.TargetId, currentUser);
+                var result = await _roleService.DeleteRoleByRoleId(request.TargetId, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -151,15 +118,15 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpPut]
-        [PermissionChecker(Permission = PermissionType.DeleteUser)]
-        [Route("user/toggle-active-status")]
+        [PermissionChecker(Permission = PermissionType.ActiveStatusRole)]
+        [Route("role/toggle-active-status")]
 
         public async Task<IActionResult> ToggleActiveStatus(GetByIdDto request)
         {
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _userService.ToggleActiveStatusByUserId(request.TargetId, currentUser);
+                var result = await _roleService.ToggleActiveStatusByRoleId(request.TargetId, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -181,14 +148,14 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpPut]
-        [PermissionChecker(Permission = PermissionType.UpdateUser)]
-        [Route("user/update")]
-        public async Task<IActionResult> Update([FromQuery]Guid userId,[FromBody] UpdateUserDto request)
+        [PermissionChecker(Permission = PermissionType.UpdateRole)]
+        [Route("role/update")]
+        public async Task<IActionResult> Update([FromQuery] Guid userId, [FromBody] UpdateRoleDto request)
         {
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _userService.UpdateUser(userId, request, currentUser);
+                var result = await _roleService.UpdateRole(userId, request, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -209,5 +176,87 @@ namespace PelicanManagement.Presentation.Controllers
             }
         }
 
+
+        [HttpGet]
+        [Route("role/get-list")]  // For ComboList
+        public async Task<IActionResult> GetRolesList()
+        {
+            try
+            {
+                var result = await _roleService.GetRolesList();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+        [HttpPost]
+        [Route("role/get-role-permissions")]
+        public async Task<IActionResult> GetRolePermissions(GetByIdDto request)
+        {
+            try
+            {
+                var result = await _roleService.GetRolePermissionsByRoleId(request);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+        [HttpPost]
+        [Route("role/get-role-menu")]
+        public async Task<IActionResult> GetRoleMenu(GetByIdDto request)
+        {
+            try
+            {
+                var result = await _roleService.GetRoleMenusByRoleId(request.TargetId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
     }
 }

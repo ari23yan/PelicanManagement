@@ -28,18 +28,20 @@ namespace PelicanManagement.Application.Services.Implementations
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _roleRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IMapper _mapper;
         private readonly ISender _sender;
         private readonly ILogService _logService;
 
-        public UserService(IUserRepository userRepository, ILogService logService, ISender sender, IPasswordHasher passwordHasher, IMapper mapper)
+        public UserService(IUserRepository userRepository, IRoleRepository roleRepository, ILogService logService, ISender sender, IPasswordHasher passwordHasher, IMapper mapper)
         {
             _userRepository = userRepository;
             _passwordHasher = passwordHasher;
             _mapper = mapper;
             _sender = sender;
             _logService = logService;
+            _roleRepository = roleRepository;
         }
 
         public async Task<(UserAuthResponse Result, UserDto? user)> LoginUser(AuthenticateDto request)
@@ -96,28 +98,10 @@ namespace PelicanManagement.Application.Services.Implementations
             var mappedUser = _mapper.Map<UserDto>(user);
             return (UserAuthResponse.Success, mappedUser);
         }
-
-        public async Task<ResponseDto<RegisterUserDto>> RegisterUser(RegisterUserDto requset)
+        public async Task<bool> CheckUserHavePermission(Guid roleId, Guid permissionId)
         {
-            return await _userRepository.RegisterUser(requset);
+            return await _userRepository.CheckUserHavePermission(roleId, permissionId);
         }
-
-        public async Task<ResponseDto<GetRoleMenuDto>> GetRoleMenusByRoleId(Guid roleId)
-        {
-            var role = await _userRepository.GetRoleWithDetailById(roleId);
-            if (role == null)
-            {
-                return new ResponseDto<GetRoleMenuDto> { IsSuccessFull = false, Message = ErrorsMessages.NotFound, Status = "NotFound" };
-            }
-            var allPermissions = await _userRepository.GetAllPermissions();
-            var allMenus = await _userRepository.GetMenusList();
-            var userRolemenuIds = role.RoleMenus.Select(x => x.MenuId).ToList();
-            var roleMenu = await GetMenus(userRolemenuIds, allMenus);
-            var roleDetailDto = _mapper.Map<GetRoleMenuDto>(role);
-            roleDetailDto.Menus = roleMenu;
-            return new ResponseDto<GetRoleMenuDto> { IsSuccessFull = true, Data = roleDetailDto, Message = ErrorsMessages.OperationSuccessful, Status = "SuccessFull" };
-        }
-
 
         public async Task<ResponseDto<IEnumerable<UsersListDto>>> GetPaginatedUsersList(PaginationDto request)
         {
@@ -133,28 +117,29 @@ namespace PelicanManagement.Application.Services.Implementations
             };
         }
 
-        public async Task<ResponseDto<AddUserDto>> AddUser(AddUserDto request, Guid operatorId)
+        public async Task<ResponseDto<bool>> AddUser(AddUserDto request, Guid operatorId)
         {
             if (await _userRepository.CheckUserExistByPhoneMumber(request.PhoneNumber))
             {
-                return new ResponseDto<AddUserDto> { IsSuccessFull = false, Message = ErrorsMessages.PhoneNumberAlreadyExists };
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.PhoneNumberAlreadyExists };
             }
             if (await _userRepository.CheckUserExistByUsername(request.Username))
             {
-                return new ResponseDto<AddUserDto> { IsSuccessFull = false, Message = ErrorsMessages.UsernameAlreadyExists };
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.UsernameAlreadyExists };
             }
             if (await _userRepository.CheckUserExistByEmail(request.Email))
             {
-                return new ResponseDto<AddUserDto> { IsSuccessFull = false, Message = ErrorsMessages.EmailAlreadyExists };
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.EmailAlreadyExists };
             }
             request.CreatedBy = operatorId;
+            request.Password =  _passwordHasher.EncodePasswordMd5(request.Password);
             var mappedUser = _mapper.Map<User>(request);
             await _userRepository.AddAsync(mappedUser);
-            return new ResponseDto<AddUserDto> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
         public async Task<ResponseDto<bool>> DeleteUserByUserId(Guid userId, Guid operatorId)
         {
-            var user = await _userRepository.GetUserById(userId);
+            var user = await _userRepository.GetActiveORDeActiveUserById(userId);
             if (user == null)
             {
                 return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.OperationFailed };
@@ -180,7 +165,7 @@ namespace PelicanManagement.Application.Services.Implementations
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
-        public async Task<ResponseDto<bool>> UpdateUserByUserId(Guid userId, UpdateUserDto request, Guid operatorId)
+        public async Task<ResponseDto<bool>> UpdateUser(Guid userId, UpdateUserDto request, Guid operatorId)
         {
             var user = await _userRepository.GetUserById(userId);
             if (user == null)
@@ -230,8 +215,8 @@ namespace PelicanManagement.Application.Services.Implementations
 
             var userDetailDto = _mapper.Map<UserDetailDto>(user);
 
-            var allMenus = await _userRepository.GetMenusList();
-            var allPermissions = await _userRepository.GetAllPermissions();
+            var allMenus = await _roleRepository.GetMenusList();
+            var allPermissions = await _roleRepository.GetAllPermissions();
             var userRolemenuIds = user.Role.RoleMenus.Select(x => x.MenuId).ToList();
             var roleMenu = await GetMenus(userRolemenuIds, allMenus);
             var allRoles = await GetRolesList();
@@ -250,13 +235,6 @@ namespace PelicanManagement.Application.Services.Implementations
                }).ToList();
             userDetailDto.Permissions = allPermission;
             return new ResponseDto<UserDetailDto> { IsSuccessFull = true, Data = userDetailDto, Message = ErrorsMessages.OperationSuccessful };
-        }
-
-        public async Task<ResponseDto<IEnumerable<GetRolesListDto>>> GetRolesList()
-        {
-            var roleList = await _userRepository.GetRolesList();
-            var mappedRoleList = _mapper.Map<IEnumerable<GetRolesListDto>>(roleList);
-            return new ResponseDto<IEnumerable<GetRolesListDto>> { IsSuccessFull = true, Data = mappedRoleList, Message = ErrorsMessages.OperationSuccessful };
         }
 
         public async Task<List<RoleMenusDto>> GetMenus(List<Guid> menuIds, IEnumerable<Menu> allMenus)
@@ -283,8 +261,6 @@ namespace PelicanManagement.Application.Services.Implementations
             }
             return res;
         }
-
-
         public async Task<List<RoleMenusDto>> BuildMenuHierarchy(IEnumerable<RoleMenusDto> allMenus)
         {
             var menuDict = allMenus.ToDictionary(menu => menu.Id, menu => menu);
@@ -310,23 +286,13 @@ namespace PelicanManagement.Application.Services.Implementations
             }
             return rootMenus;
         }
-
-        public async Task<ResponseDto<IEnumerable<PermissionsDto>>> GetRolePermissionsByRoleId(GetByIdDto dto)
+        public async Task<ResponseDto<IEnumerable<RolesListDto>>> GetRolesList()
         {
-            var permissons = await _userRepository.GetRolePermissions(dto.TargetId);
-            var allPermissions = await _userRepository.GetAllPermissions();
-            var userRolePermissions = permissons.Select(x => x.Id).ToList();
-            var rolePermissions = allPermissions
-           .Select(g => new PermissionsDto
-           {
-               Id = g.Id,
-               PermissionName = g.PermissionName,
-               PermissionName_Farsi = g.PermissionName_Farsi,
-               Description = g.Description,
-               HasPermission = userRolePermissions.Contains(g.Id)
-           }).ToList();
-            return new ResponseDto<IEnumerable<PermissionsDto>> { IsSuccessFull = true, Data = rolePermissions, Message = ErrorsMessages.OperationSuccessful };
-
+            var roleList = await _roleRepository.GetRolesList();
+            var mappedRoleList = _mapper.Map<IEnumerable<RolesListDto>>(roleList);
+            return new ResponseDto<IEnumerable<RolesListDto>> { IsSuccessFull = true, Data = mappedRoleList, Message = ErrorsMessages.OperationSuccessful };
         }
+
     }
 }
+    

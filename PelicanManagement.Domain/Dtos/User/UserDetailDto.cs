@@ -33,6 +33,6 @@ namespace PelicanManagement.Domain.Dtos.User
         public Guid? ModifiedBy { get; set; }
         public List<PermissionsDto> Permissions { get; set; }
         public List<RoleMenusDto> Menus { get; set; }
-        public List<GetRolesListDto> AllRoles { get; set; }
+        public List<RolesListDto> AllRoles { get; set; }
     }
 }

@@ -11,5 +11,6 @@ namespace PelicanManagement.Domain.Enums
         RoleChange,
         PermissionChange,
         MenuChange,
+        CreateUser,
     }
 }

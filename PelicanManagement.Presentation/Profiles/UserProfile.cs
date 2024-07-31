@@ -16,10 +16,14 @@ namespace PelicanManagement.Presentation.Profiles
                 .ReverseMap();
 
 
-            CreateMap<Menu, RoleMenusDto>().ReverseMap();
-            CreateMap<User, AddUserDto>().ReverseMap();
-            CreateMap<Role, RoleMenusDto>().ReverseMap();
-            CreateMap<Role, GetRoleMenuDto>().ReverseMap();
+            CreateMap<User, AddUserDto>().ReverseMap()
+             .ForMember(dest => dest.Password, opt => opt.MapFrom(src =>
+             
+             src.Password))
+
+
+                ;
+        
 
             CreateMap< User, UserDetailDto>()
              .ForMember(dest => dest.RoleName_Farsi, opt => opt.MapFrom(src => src.Role.RoleName_Farsi))
@@ -29,11 +33,7 @@ namespace PelicanManagement.Presentation.Profiles
              .ReverseMap();
 
 
-            CreateMap<Role, GetRolesListDto>().ReverseMap();
-
-            CreateMap<PermissionsDto, RolePermission>()
-                .ReverseMap();
-            CreateMap<Permission, PermissionsDto>().ReverseMap();
+         
 
             CreateMap<UpdateUserDto, User>()
                 .ForMember(dest => dest.ModifiedDate, opt => opt.MapFrom(src => DateTime.Now))
