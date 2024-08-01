@@ -25,5 +25,6 @@ namespace PelicanManagement.Application.Services.Interfaces
         Task<ResponseDto<bool>> ToggleActiveStatusByUserId(Guid userId, Guid operatorId);
         Task<ResponseDto<UserDetailDto>> GetUserDetailByUserId(Guid userId);
         Task<ResponseDto<bool>> UpdateUser(Guid userId, UpdateUserDto request, Guid operatorId);
+        Task<ResponseDto<bool>> ChangePassword(Guid userId, string password);
     }
 }

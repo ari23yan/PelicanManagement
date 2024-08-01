@@ -293,6 +293,19 @@ namespace PelicanManagement.Application.Services.Implementations
             return new ResponseDto<IEnumerable<RolesListDto>> { IsSuccessFull = true, Data = mappedRoleList, Message = ErrorsMessages.OperationSuccessful };
         }
 
+        public async Task<ResponseDto<bool>> ChangePassword(Guid userId, string password)
+        {
+            var user = await _userRepository.GetUserById(userId);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.OperationFailed };
+            }
+            user.Password = _passwordHasher.EncodePasswordMd5(password);
+            user.ModifiedDate = DateTime.UtcNow;
+            user.ModifiedBy = userId;
+            await _userRepository.UpdateAsync(user);
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
+        }
     }
 }
     
