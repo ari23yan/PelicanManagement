@@ -1,5 +1,4 @@
-﻿using PelicanManagement.Domain.Dtos.Permissions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace PelicanManagement.Domain.Dtos.Role
 {
-    public class RoleMenuDto
+    public class RoleDto
     {
         public Guid Id { get; set; }
         public string RoleName { get; set; }
         public string RoleName_Farsi { get; set; }
         public string Description { get; set; }
-        public List<RoleMenusDto> Menus { get; set; }
-        public List<PermissionsDto> Permission { get; set; }
+        public bool HasRole { get; set; }
+
     }
 }

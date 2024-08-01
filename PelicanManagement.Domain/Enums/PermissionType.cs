@@ -19,6 +19,7 @@ namespace PelicanManagement.Domain.Enums
 
 
         public const string GetRoleList = "520b33b0-5328-4a05-96e6-cdde111f44e2";
+        public const string GetRole = "bdf03774-6e57-442e-a1a5-95abb65ab5c8";
         public const string AddRole = "c37e30f4-cfe6-4ac9-b75f-1eae7190a497";
         public const string DeleteRole = "863330f2-19d1-4d7e-ba20-81dd6863617d";
         public const string ActiveStatusRole = "81266c68-df8e-4228-b99b-05d5dc6cdf3e";

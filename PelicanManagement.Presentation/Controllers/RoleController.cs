@@ -60,6 +60,34 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpPost]
+        [Route("role/get")]
+        [PermissionChecker(Permission = PermissionType.GetRole)]
+        public async Task<IActionResult> Get(GetByIdDto request)
+        {
+            try
+            {
+                var result = await _roleService.GetRoleMenusByRoleId(request.TargetId.Value);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+        [HttpPost]
         [PermissionChecker(Permission = PermissionType.AddRole)]
         [Route("role/add")]
         public async Task<IActionResult> Add([FromBody] AddRoleDto request)
@@ -96,7 +124,7 @@ namespace PelicanManagement.Presentation.Controllers
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _roleService.DeleteRoleByRoleId(request.TargetId, currentUser);
+                var result = await _roleService.DeleteRoleByRoleId(request.TargetId.Value, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -126,7 +154,7 @@ namespace PelicanManagement.Presentation.Controllers
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _roleService.ToggleActiveStatusByRoleId(request.TargetId, currentUser);
+                var result = await _roleService.ToggleActiveStatusByRoleId(request.TargetId.Value, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -150,12 +178,12 @@ namespace PelicanManagement.Presentation.Controllers
         [HttpPut]
         [PermissionChecker(Permission = PermissionType.UpdateRole)]
         [Route("role/update")]
-        public async Task<IActionResult> Update([FromQuery] Guid userId, [FromBody] UpdateRoleDto request)
+        public async Task<IActionResult> Update([FromQuery] Guid roleId, [FromBody] UpdateRoleDto request)
         {
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _roleService.UpdateRole(userId, request, currentUser);
+                var result = await _roleService.UpdateRole(roleId, request, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -238,7 +266,7 @@ namespace PelicanManagement.Presentation.Controllers
         {
             try
             {
-                var result = await _roleService.GetRoleMenusByRoleId(request.TargetId);
+                var result = await _roleService.GetRoleMenusByRoleId(request.TargetId.Value);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -258,5 +286,36 @@ namespace PelicanManagement.Presentation.Controllers
                 return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
             }
         }
+
+        [HttpGet]
+        [Route("role/get-permissons-and-menus-list")]  // For ComboList
+        public async Task<IActionResult> GetRolePermissionsAndMenus([FromQuery] GetByIdDto request)
+        {
+            try
+            {
+                var result = await _roleService.GetRolesPermissionAndMenus(request.TargetId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+
+
+
     }
 }

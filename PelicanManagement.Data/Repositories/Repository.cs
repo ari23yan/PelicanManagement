@@ -89,14 +89,33 @@ namespace PelicanManagement.Data.Repositories
 
         public async Task AddRangeAsync(List<T> entity)
         {
-
+            using var transaction = await Context.Database.BeginTransactionAsync();
             try
             {
                 await entities.AddRangeAsync(entity);
                 await Context.SaveChangesAsync();
+                await transaction.CommitAsync();
             }
             catch (Exception)
             {
+                await transaction.RollbackAsync();
+                throw;
+            }
+        }
+        public async Task RemoveRangeAsync(List<T> entity)
+        {
+            using var transaction = await Context.Database.BeginTransactionAsync();
+
+            try
+            {
+                entities.RemoveRange(entity);
+                await Context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
                 throw;
             }
         }

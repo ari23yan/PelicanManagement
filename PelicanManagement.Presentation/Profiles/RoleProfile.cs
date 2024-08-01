@@ -25,6 +25,12 @@ namespace PelicanManagement.Presentation.Profiles
 
             CreateMap<Role, AddRoleDto>().ReverseMap();
 
+            CreateMap<Role, UpdateRoleDto>()
+            .ForMember(dest => dest.PermissionIds, opt => opt.Ignore())
+            .ForMember(dest => dest.MenuIds, opt => opt.Ignore())
+                .ReverseMap();
+
+
 
 
 

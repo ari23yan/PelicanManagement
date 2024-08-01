@@ -23,6 +23,7 @@ namespace PelicanManagement.Domain.Interfaces
         Task AddRangeAsync(List<T> entity);
 
         void Remove(T entity);
+        Task RemoveRangeAsync(List<T> entity);
 
         Task UpdateAsync(T item);
     }

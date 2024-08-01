@@ -33,6 +33,8 @@ namespace PelicanManagement.Domain.Dtos.Common.ResponseModel
         public static string EmailAlreadyExists = "ایمیل وارد شده قبلاً در سیستم ثبت شده است.";
         public static string SmsPanelNotResponding = "ارسال پیامک با خطا مواجه شد. لطفاً مجدداً تلاش فرمایید.";
         public static string EmailNotConfirmed = "ایمیل شما تأیید نشده است. لطفاً ایمیل خود را تأیید فرمایید.";
+        public static string MenusIsNotValid = "خطا،انتخاب منو برای نقش الزامیست";
+        public static string PermissionIsNotValid = "خطا،انتخاب دسترسی برای نقش الزامیست";
 
     }
 }

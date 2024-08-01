@@ -71,7 +71,7 @@ namespace PelicanManagement.Presentation.Controllers
         {
             try
             {
-                var result = await _userService.GetUserDetailByUserId(request.TargetId);
+                var result = await _userService.GetUserDetailByUserId(request.TargetId.Value);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace PelicanManagement.Presentation.Controllers
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _userService.DeleteUserByUserId(request.TargetId, currentUser);
+                var result = await _userService.DeleteUserByUserId(request.TargetId.Value, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -151,7 +151,7 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpPut]
-        [PermissionChecker(Permission = PermissionType.DeleteUser)]
+        [PermissionChecker(Permission = PermissionType.ActiveStatusUser)]
         [Route("user/toggle-active-status")]
 
         public async Task<IActionResult> ToggleActiveStatus(GetByIdDto request)
@@ -159,7 +159,7 @@ namespace PelicanManagement.Presentation.Controllers
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _userService.ToggleActiveStatusByUserId(request.TargetId, currentUser);
+                var result = await _userService.ToggleActiveStatusByUserId(request.TargetId.Value, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)

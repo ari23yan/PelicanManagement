@@ -16,6 +16,7 @@ namespace PelicanManagement.Application.Services.Interfaces
     {
         Task<ResponseDto<IEnumerable<RolesListDto>>> GetPaginatedRolesList(PaginationDto request);
         Task<ResponseDto<RoleMenuDto>> GetRoleMenusByRoleId(Guid roleId);
+        Task<ResponseDto<RolesListWithPermissionAndMenusDto>> GetRolesPermissionAndMenus(Guid? roleId);
         Task<ResponseDto<IEnumerable<RolesListDto>>> GetRolesList();
         Task<ResponseDto<bool>> AddRole(AddRoleDto requset, Guid operatorId);
         Task<ResponseDto<bool>> UpdateRole(Guid roleId, UpdateRoleDto request, Guid operatorId);

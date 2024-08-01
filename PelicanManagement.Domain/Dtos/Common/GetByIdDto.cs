@@ -8,6 +8,6 @@ namespace PelicanManagement.Domain.Dtos.Common
 {
     public class GetByIdDto
     {
-        public Guid TargetId { get; set; }
+        public Guid? TargetId { get; set; }
     }
 }

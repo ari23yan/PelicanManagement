@@ -22,8 +22,8 @@ namespace PelicanManagement.Data.Repositories
         public async Task<Role?> GetRoleWithDetailById(Guid roleId)
         {
             return await Context.Roles
-            .Include(u => u.RoleMenus)
-            .Include(u => u.RolePermissions)
+            .Include(u => u.RoleMenus.Where(u => !u.IsDeleted && u.IsActive))
+            .Include(u => u.RolePermissions.Where(u => !u.IsDeleted && u.IsActive))
             .ThenInclude(rp => rp.Permission)
             .IgnoreAutoIncludes()
             .FirstOrDefaultAsync(u => u.Id.Equals(roleId) && !u.IsDeleted && u.IsActive);
@@ -45,6 +45,12 @@ namespace PelicanManagement.Data.Repositories
         {
             return await Context.Menus.Where(x => !x.IsDeleted && x.IsActive).OrderBy(x => x.CreatedDate).ToListAsync();
         }
+        public async Task<IEnumerable<Menu>> GetMenusWithoutSubsList()
+        {
+            return await Context.Menus.Where(x => !x.IsDeleted && x.IsActive && x.SubMenuId == null).OrderBy(x => x.CreatedDate).ToListAsync();
+        }
+
+
         public async Task<IEnumerable<Role>> GetRolesList()
         {
             return await Context.Roles.Where(x => !x.IsDeleted && x.IsActive).ToListAsync();
@@ -57,6 +63,11 @@ namespace PelicanManagement.Data.Repositories
         {
             return await Context.Roles.FirstOrDefaultAsync(u => u.Id.Equals(roleId) && !u.IsDeleted);
         }
+        public async Task<IEnumerable<Menu>> GetRoleMenusByRoleId(Guid roleId)
+        {
+            return  await Context.RoleMenus.Include(x=>x.Menu).Where(u => u.Id.Equals(roleId) && !u.IsDeleted).Select(x=>x.Menu).ToListAsync();
+        }
+        
         public async Task<IEnumerable<Menu>> GetAllMenus()
         {
             return await Context.Menus
