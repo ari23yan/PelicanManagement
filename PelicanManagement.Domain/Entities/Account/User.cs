@@ -25,7 +25,6 @@ namespace PelicanManagement.Domain.Entities.Account
         public string? PhoneNumber { get; set; }
         [MaxLength(128)]
         public string? Email { get; set; }
-        public bool EmailConfirmed { get; set; } = false;
         [MaxLength(6)]
         public string? OtpCode { get; set; }
         public Guid RoleId { get; set; }

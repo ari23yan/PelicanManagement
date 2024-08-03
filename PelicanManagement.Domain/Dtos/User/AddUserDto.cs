@@ -17,7 +17,6 @@ namespace PelicanManagement.Domain.Dtos.User
         public string Password { get; set; }
         public string? PhoneNumber { get; set; }
         public string? Email { get; set; }
-        public bool? EmailConfirmed { get; set; } = false;
         [SwaggerSchema(ReadOnly = true)]
         public Guid? CreatedBy { get; set; }
         public Guid RoleId { get; set; }
