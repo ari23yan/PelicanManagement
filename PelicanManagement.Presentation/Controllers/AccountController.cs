@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using PelicanManagement.Application.Security;
 using PelicanManagement.Application.Services.Interfaces;
 using PelicanManagement.Application.Utilities;
@@ -34,7 +35,6 @@ namespace PelicanManagement.Presentation.Controllers
             _httpContextAccessor = httpContextAccessor;
             _logService = logService;
         }
-
 
         [AllowAnonymous]
         [HttpPost]
@@ -76,6 +76,89 @@ namespace PelicanManagement.Presentation.Controllers
                     default:
                         return BadRequest(new ResponseDto<UserDto> { IsSuccessFull = false, Message = ErrorsMessages.FailedLogin });
                 }
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("forget-password")]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordPhoneNumberDto request)
+        {
+            try
+            {
+                var result = await _userService.ForgetPassword(request.PhoneNumber);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("confirm-otp")]
+        public async Task<IActionResult> ConfirmOtp(ConfrimOtpDto request)
+        {
+            try
+            {
+                var result = await _userService.ConfirmOtp(request);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPut]
+        [Route("forget-password")]
+        public async Task<IActionResult> ForgetPassword(ForgetPasswordDto request)
+        {
+            try
+            {
+                var result = await _userService.SubmitPassword(request);
+                return Ok(result);
             }
             catch (Exception ex)
             {

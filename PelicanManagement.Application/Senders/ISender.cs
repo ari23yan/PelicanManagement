@@ -9,8 +9,7 @@ namespace PelicanManagement.Application.Senders
 {
     public interface ISender
     {
-        void SendMailForSignUp(SendMailDto request);
-        void SendMailForgetPassword(SendMailDto request);
-        Task<bool> ConfirmEmailAddress(SendMailDto request);
+        Task<bool> SendSmsForgetPassword(SendSmsDto sendSmsDto);
+
     }
 }

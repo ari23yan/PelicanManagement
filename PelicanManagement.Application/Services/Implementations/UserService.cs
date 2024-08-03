@@ -79,20 +79,6 @@ namespace PelicanManagement.Application.Services.Implementations
                 return (UserAuthResponse.WrongPassword, null);
             }
 
-
-            if (!user.EmailConfirmed)
-            {
-                var otp = UtilityManager.OtpGenrator();
-                await _sender.ConfirmEmailAddress(new SendMailDto
-                {
-                    Code = otp,
-                    Email = user.Email,
-                    Username = user.Username,
-                });
-                user.OtpCode = otp;
-                await _userRepository.UpdateAsync(user);
-                return (UserAuthResponse.EmailNotConfirmed, new UserDto { Email = user.Email });
-            }
             user.LastLoginDate = DateTime.Now;
             await _userRepository.UpdateAsync(user);
             var mappedUser = _mapper.Map<UserDto>(user);
@@ -132,7 +118,7 @@ namespace PelicanManagement.Application.Services.Implementations
                 return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.EmailAlreadyExists };
             }
             request.CreatedBy = operatorId;
-            request.Password =  _passwordHasher.EncodePasswordMd5(request.Password);
+            request.Password = _passwordHasher.EncodePasswordMd5(request.Password);
             var mappedUser = _mapper.Map<User>(request);
             await _userRepository.AddAsync(mappedUser);
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
@@ -298,7 +284,7 @@ namespace PelicanManagement.Application.Services.Implementations
             var user = await _userRepository.GetUserById(userId);
             if (user == null)
             {
-                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.OperationFailed };
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
             }
             user.Password = _passwordHasher.EncodePasswordMd5(password);
             user.ModifiedDate = DateTime.UtcNow;
@@ -306,6 +292,47 @@ namespace PelicanManagement.Application.Services.Implementations
             await _userRepository.UpdateAsync(user);
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
+
+        public async Task<ResponseDto<bool>> ForgetPassword(string mobile)
+        {
+            var user = await _userRepository.GetUserByMobile(mobile);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
+            }
+            var otp = UtilityManager.OtpGenrator();
+            user.OtpCode = otp;
+            await _userRepository.UpdateAsync(user);
+            await _sender.SendSmsForgetPassword(new SendSmsDto { Code = otp, Username = user.Username, PhoneNumber = user.PhoneNumber });
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OtpSent };
+        }
+
+        public async Task<ResponseDto<bool>> ConfirmOtp(ConfrimOtpDto request)
+        {
+            var user = await _userRepository.GetUserByMobile(request.PhoneNumber);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
+            }
+            if(!user.OtpCode.Equals(request.Otp))
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.IncorrectOtp };
+            }
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
+        }
+
+        public async Task<ResponseDto<bool>> SubmitPassword(ForgetPasswordDto request)
+        {
+            var user = await _userRepository.GetUserByMobile(request.PhoneNumber);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
+            }
+            user.Password = _passwordHasher.EncodePasswordMd5(request.Password);
+            user.ModifiedDate = DateTime.UtcNow;
+            user.ModifiedBy = user.Id;
+            await _userRepository.UpdateAsync(user);
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
+        }
     }
 }
-    
