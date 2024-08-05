@@ -2,8 +2,7 @@
 using PelicanManagement.Data.Context;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
-using PelicanManagement.Domain.Entities.Account;
-using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using PelicanManagement.Domain.Enums;
 using PelicanManagement.Domain.Interfaces;
 using System;

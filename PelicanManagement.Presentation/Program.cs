@@ -15,6 +15,14 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("PelicanManagementConnection")
     ));
 
+builder.Services.AddDbContext<PelicanDbContext>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("Mldhsp7Pelican")
+    ));
+
+builder.Services.AddDbContext<IdentityServerDbContext>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("Identity4Server")
+    ));
+
 builder.Services.AddDependencies();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddHttpContextAccessor();

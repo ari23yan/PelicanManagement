@@ -1,5 +1,4 @@
-﻿using PelicanManagement.Domain.Entities.Account;
-using PelicanManagement.Domain.Entities.Common;
+﻿using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PelicanManagement.Domain.Entities.Account
+namespace PelicanManagement.Domain.Entities.PelicanManagement.Account
 {
     [Table("RoleMenus", Schema = "Account")]
 

@@ -8,8 +8,6 @@ using PelicanManagement.Domain.Dtos.Common;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
 using PelicanManagement.Domain.Dtos.Permissions;
 using PelicanManagement.Domain.Dtos.Role;
-using PelicanManagement.Domain.Entities.Account;
-using PelicanManagement.Domain.Entities.Common;
 using PelicanManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,6 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 
 namespace PelicanManagement.Application.Services.Implementations
 {

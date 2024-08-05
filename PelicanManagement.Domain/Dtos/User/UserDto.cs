@@ -1,5 +1,5 @@
 ﻿using PelicanManagement.Domain.Dtos.Role;
-using PelicanManagement.Domain.Entities.Account;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

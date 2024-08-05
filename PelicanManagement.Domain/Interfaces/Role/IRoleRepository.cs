@@ -1,7 +1,6 @@
 ﻿using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
-using PelicanManagement.Domain.Entities.Account;
-using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -5,7 +5,7 @@ using PelicanManagement.Domain.Dtos.Common.ResponseModel;
 using PelicanManagement.Domain.Dtos.Permissions;
 using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Dtos.User;
-using PelicanManagement.Domain.Entities.Account;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using PelicanManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;

@@ -16,6 +16,15 @@ namespace PelicanManagement.Application.Utilities
 {
     public static class UtilityManager
     {
+        public static string GenerateSecurityStamp()
+        {
+            using (var rng = new RNGCryptoServiceProvider())
+            {
+                byte[] randomBytes = new byte[32]; // 256 bits
+                rng.GetBytes(randomBytes);
+                return Convert.ToBase64String(randomBytes);
+            }
+        }
         public static bool IsMobile(string input)
         {
             string mobilePattern = @"^09\d{9}$";

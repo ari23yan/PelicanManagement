@@ -2,8 +2,7 @@
 using PelicanManagement.Domain.Dtos.Permissions;
 using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Dtos.User;
-using PelicanManagement.Domain.Entities.Account;
-using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 
 namespace PelicanManagement.Presentation.Profiles
 {

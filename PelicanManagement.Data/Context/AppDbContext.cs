@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PelicanManagement.Domain.Entities.Account;
-using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
+using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PelicanManagement.Domain.Entities.Common
+namespace PelicanManagement.Domain.Entities.PelicanManagement.Common
 {
     public class BaseEntity
     {

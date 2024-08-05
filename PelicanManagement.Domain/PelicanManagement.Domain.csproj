@@ -41,4 +41,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dtos\Management\Pelican\" />
+  </ItemGroup>
+
 </Project>

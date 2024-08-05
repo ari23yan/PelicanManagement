@@ -1,8 +1,6 @@
 ﻿using PelicanManagement.Application.Services.Interfaces;
-using PelicanManagement.Domain.Entities.Common;
 using PelicanManagement.Domain.Interfaces;
 using PelicanManagement.Application.Services.Interfaces;
-using PelicanManagement.Domain.Entities.Common;
 using PelicanManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -12,6 +10,7 @@ using System.Threading.Tasks;
 using PelicanManagement.Application.Utilities;
 using PelicanManagement.Domain.Dtos.Common.AccessLog;
 using PelicanManagement.Domain.Enums;
+using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 
 namespace PelicanManagement.Application.Services.Implementations
 {

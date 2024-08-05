@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using PelicanManagement.Domain.Entities.Account;
 using PelicanManagement.Application.Security;
 using System.Reflection;
-using PelicanManagement.Domain.Entities.Common;
+using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
+using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 
 namespace PelicanManagement.Data.Repositories
 {
