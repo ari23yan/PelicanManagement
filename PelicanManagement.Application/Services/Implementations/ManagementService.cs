@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Identity;
+using PelicanManagement.Application.Security;
 using PelicanManagement.Application.Services.Interfaces;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
@@ -38,16 +39,27 @@ namespace PelicanManagement.Application.Services.Implementations
             _passwordHasher = passwordHasher;
         }
 
-        public async Task<ResponseDto<bool>> AddUser(AddIdentityUserDto requset, Guid operatorId)
+        public async Task<ResponseDto<bool>> AddUser(AddIdentityUserDto request, Guid operatorId)
         {
-            var isExist = await _identityServer.IsExist(x => x.UserName.Equals(requset.UserName) || x.PersonalCode.Equals(requset.PersonalCode));
+            var isExist = await _identityServer.IsExist(x => x.UserName.Equals(request.UserName) || x.PersonalCode.Equals(request.PersonalCode));
             if (isExist)
             {
                 return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.RecordAlreadyExists };
             }
-            var mappedUser = _mapper.Map<Domain.Entities.IdentityServer.User>(requset);
-            mappedUser.PasswordHash = _passwordHasher.HashPassword(mappedUser, requset.Password);
+            var mappedUser = _mapper.Map<Domain.Entities.IdentityServer.User>(request);
+            mappedUser.PasswordHash = _passwordHasher.HashPassword(mappedUser, request.Password);
             await _identityServer.AddAsync(mappedUser);
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
+        }
+
+        public async Task<ResponseDto<bool>> DeleteUser(int userID, Guid operatorId)
+        {
+            var user = await _identityServer.Get(userID);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
+            }
+            _identityServer.Remove(user);
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
@@ -95,6 +107,19 @@ namespace PelicanManagement.Application.Services.Implementations
             }
             return new ResponseDto<ApiUser> { IsSuccessFull = true, Data = user, Message = ErrorsMessages.OperationSuccessful, Status = "SuccessFull" };
 
+        }
+
+        public async Task<ResponseDto<bool>> UpdateUser(int userID, UpdateIdentityUserDto request, Guid operatorId)
+        {
+            var user = await _identityServer.Get(userID);
+            if (user == null)
+            {
+                return new ResponseDto<bool> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
+            }
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.Password);
+            user.PersonalCode = request.PersoanlCode;
+            await _identityServer.UpdateAsync(user);
+            return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
     }
 }

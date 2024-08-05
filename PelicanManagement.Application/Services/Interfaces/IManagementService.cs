@@ -28,6 +28,10 @@ namespace PelicanManagement.Application.Services.Interfaces
 
 
         Task<ResponseDto<bool>> AddUser(AddIdentityUserDto requset, Guid operatorId);
+        Task<ResponseDto<bool>> DeleteUser(int userID, Guid operatorId);
+
+        Task<ResponseDto<bool>> UpdateUser(int userID, UpdateIdentityUserDto request, Guid operatorId);
+
 
 
 
