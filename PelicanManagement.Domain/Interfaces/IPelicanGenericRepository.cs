@@ -19,7 +19,7 @@ namespace PelicanManagement.Domain.Interfaces
         Task<IEnumerable<T?>> GetAllAsync(Expression<Func<T, bool>> filter);
         Task AddAsync(T entity);
         Task AddRangeAsync(List<T> entity);
-        void Remove(T entity);
+        Task Remove(T entity);
         Task RemoveRangeAsync(List<T> entity);
         Task UpdateAsync(T item);
     }

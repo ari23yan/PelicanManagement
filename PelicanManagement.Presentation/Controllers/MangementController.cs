@@ -30,6 +30,9 @@ namespace PelicanManagement.Presentation.Controllers
             _logService = logService;
             _managementService = managementService;
         }
+
+
+
         #region Identity4Server
 
 
@@ -64,11 +67,11 @@ namespace PelicanManagement.Presentation.Controllers
         [HttpPost]
         [Route("management/identity/get")]
         //[PermissionChecker(Permission = PermissionType.GetRole)]
-        public async Task<IActionResult> Get(int userId)
+        public async Task<IActionResult> Get([FromBody] GetUserRequest request)
         {
             try
             {
-                var result = await _managementService.GetUserByUserId(userId);
+                var result = await _managementService.GetUserDetailByUserId(request.Username);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -122,12 +125,12 @@ namespace PelicanManagement.Presentation.Controllers
         [HttpDelete]
         //[PermissionChecker(Permission = PermissionType.DeleteRole)]
         [Route("management/identity/delete")]
-        public async Task<IActionResult> Delete(int userId)
+        public async Task<IActionResult> Delete([FromBody] DeleteUserRequest request)
         {
             try
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _managementService.DeleteUser(userId, currentUser);
+                var result = await _managementService.DeleteUser(request.UserId, currentUser);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -180,6 +183,35 @@ namespace PelicanManagement.Presentation.Controllers
 
 
 
+
+        [HttpGet]
+        [Route("management/get-permissons-and-units-list")]  // For ComboList
+        public async Task<IActionResult> GetPermissionsAndUnits()
+        {
+            try
+            {
+                var result = await _managementService.GetPermissionsAndUnits();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
+
+
         #endregion
 
 
@@ -215,33 +247,33 @@ namespace PelicanManagement.Presentation.Controllers
 
 
 
-        [HttpPost]
-        [Route("management/pelican/get")]
-        //[PermissionChecker(Permission = PermissionType.GetRole)]
-        public async Task<IActionResult> PelicaGet(string userId)
-        {
-            try
-            {
-                var result = await _managementService.GetUserByUserId(userId);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                #region Inserting Log 
-                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
-                {
+        //[HttpPost]
+        //[Route("management/pelican/get")]
+        ////[PermissionChecker(Permission = PermissionType.GetRole)]
+        //public async Task<IActionResult> PelicaGet(string userId)
+        //{
+        //    try
+        //    {
+        //        var result = await _managementService.GetUserByUserId(userId);
+        //        return Ok(result);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        #region Inserting Log 
+        //        if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+        //        {
 
-                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
-                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-                    var routeData = ControllerContext.RouteData;
-                    var controllerName = routeData.Values["controller"]?.ToString();
-                    var actionName = routeData.Values["action"]?.ToString();
-                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
-                }
-                #endregion
-                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
-            }
-        }
+        //            var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+        //            var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+        //            var routeData = ControllerContext.RouteData;
+        //            var controllerName = routeData.Values["controller"]?.ToString();
+        //            var actionName = routeData.Values["action"]?.ToString();
+        //            _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+        //        }
+        //        #endregion
+        //        return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+        //    }
+        //}
         #endregion
 
     }

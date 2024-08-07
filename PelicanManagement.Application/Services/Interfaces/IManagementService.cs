@@ -20,9 +20,9 @@ namespace PelicanManagement.Application.Services.Interfaces
 
 
 
-        Task<ResponseDto<User>> GetUserByUserId(int userId);
+        Task<ResponseDto<IdentityUserDetailDto>> GetUserDetailByUserId(string userId);
+        Task<ResponseDto<PermissionsAndUnitsDto>> GetPermissionsAndUnits();
 
-        Task<ResponseDto<ApiUser>> GetUserByUserId(string userId);
 
 
 

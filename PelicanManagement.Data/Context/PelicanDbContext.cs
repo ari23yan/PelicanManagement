@@ -16,6 +16,13 @@ namespace PelicanManagement.Data.Context
 
         public DbSet<ApiUser> ApiUsers { get; set; }
 
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<UserPermission> UserPermissions { get; set; }
+        public DbSet<Units> Units { get; set; }
+        public DbSet<UsersUnit> UsersUnits { get; set; }
+
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

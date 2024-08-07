@@ -2,6 +2,8 @@
 using PelicanManagement.Data.Context;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
+using PelicanManagement.Domain.Dtos.Management.IdentityServer;
+using PelicanManagement.Domain.Dtos.Management.Pelican;
 using PelicanManagement.Domain.Entities.Pelican;
 using PelicanManagement.Domain.Enums;
 using PelicanManagement.Domain.Interfaces.Management;
@@ -46,6 +48,67 @@ namespace PelicanManagement.Data.Repositories.Management
 
 
             return responseDto;
+        }
+
+        public async Task<List<UserPermission>> GetUserPermissions(string username)
+        {
+            return await Context.UserPermissions
+                                         .Where(up => up.UserId.Equals(username))
+                                         .ToListAsync();
+        }
+
+        public async Task<PermissionsAndUnitsDto> GetPermissionsAndUnits()
+        {
+            PermissionsAndUnitsDto permissionsAndUnits = new PermissionsAndUnitsDto();
+            permissionsAndUnits.UserUnits = await Context.Units.ToListAsync();
+            permissionsAndUnits.UserPermissions = await Context.Permissions.ToListAsync();
+
+            return permissionsAndUnits;
+        }
+
+        public async Task<List<UsersUnit>> GetUserUnits(string username)
+        {
+            return await Context.UsersUnits
+                                           .Where(up => up.Username.Equals(username))
+                                           .ToListAsync();
+
+        }
+
+        public async Task<List<PelicanUserPermissionsDto>> GetUserPermissionsByUsername(string username)
+        {
+            var allPermissions = await Context.Permissions.ToListAsync();
+
+            var userPermissions = await Context.UserPermissions
+                                                .Where(up => up.UserId.Equals(username))
+                                                .ToListAsync();
+
+            var result = allPermissions.Select(permission => new PelicanUserPermissionsDto
+            {
+                Description = permission.Description,
+                PermissionId = permission.Id,
+                PermissionName = permission.Name,
+                HasPermission = userPermissions.Any(up => up.PermissionId == permission.Id)
+            }).ToList();
+
+            return result;
+        }
+
+
+        public async Task<List<PelicanUserUnitsDto>> GetUserUnitsByUsername(string username)
+        {
+            var allUnits = await Context.Units.ToListAsync();
+
+            var userUnits = await Context.UsersUnits
+                                                .Where(up => up.Username.Equals(username))
+                                                .ToListAsync();
+            var result = allUnits.Select(unit => new PelicanUserUnitsDto
+            {
+                UnitName = unit.Name,
+                unitId = unit.Id,
+                HaveUnit = userUnits.Any(up => up.UnitId == unit.Id)
+            }).ToList();
+
+            return result;
         }
     }
 }

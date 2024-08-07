@@ -54,9 +54,20 @@ namespace PelicanManagement.Data.Repositories
             return await entities.SingleOrDefaultAsync(filter);
         }
 
-        public void Remove(T entity)
+        public async Task Remove(T entity)
         {
-            entities.Remove(entity);
+            using var transaction = await Context.Database.BeginTransactionAsync();
+            try
+            {
+                entities.Remove(entity);
+                await Context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public virtual async Task UpdateAsync(T entity)

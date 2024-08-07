@@ -2,6 +2,7 @@
 using PelicanManagement.Data.Context;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
+using PelicanManagement.Domain.Dtos.Management.IdentityServer;
 using PelicanManagement.Domain.Entities.IdentityServer;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using PelicanManagement.Domain.Enums;
@@ -26,6 +27,11 @@ namespace PelicanManagement.Data.Repositories.Management
             return await Context.Users.FirstOrDefaultAsync(x => x.Id == userId);
         }
 
+        public async Task<Domain.Entities.IdentityServer.User> GetByUsername(string username)
+        {
+            return await Context.Users.FirstOrDefaultAsync(x => x.UserName == username);
+        }
+
         public async Task<ListResponseDto<Domain.Entities.IdentityServer.User>> GetPaginatedUsersList(PaginationDto paginationRequest)
         {
             ListResponseDto<Domain.Entities.IdentityServer.User> responseDto = new ListResponseDto<Domain.Entities.IdentityServer.User>();
@@ -46,5 +52,6 @@ namespace PelicanManagement.Data.Repositories.Management
             responseDto.List = await pagedQuery.ToListAsync();
             return responseDto;
         }
+    
     }
 }

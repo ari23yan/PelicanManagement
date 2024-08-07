@@ -1,5 +1,6 @@
 ﻿using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
+using PelicanManagement.Domain.Dtos.Management.IdentityServer;
 using PelicanManagement.Domain.Entities.IdentityServer;
 using PelicanManagement.Domain.Entities.Pelican;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
@@ -15,6 +16,6 @@ namespace PelicanManagement.Domain.Interfaces.Management
     {
         Task<ListResponseDto<Entities.IdentityServer.User>> GetPaginatedUsersList(PaginationDto request);
         Task<Entities.IdentityServer.User> Get(int userId);
-
+        Task<Entities.IdentityServer.User> GetByUsername(string username);
     }
 }
