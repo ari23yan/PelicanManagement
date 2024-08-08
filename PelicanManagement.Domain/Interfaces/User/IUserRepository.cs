@@ -3,6 +3,7 @@ using PelicanManagement.Domain.Dtos.Common.ResponseModel;
 using PelicanManagement.Domain.Dtos.User;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
+using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 using PelicanManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
@@ -21,6 +22,7 @@ namespace PelicanManagement.Domain.Interfaces
         Task<User> GetUserByMobile(string mobile);
         Task<User?> GetUserByEmail(string email);
         Task<User> GetUserByUsername(string username);
+        Task<List<UserActivityLog>> GetActivitiesLogByUserId(Guid userId);
         Task<User?> GetUserDetailById(Guid userId);
         Task<User> GetUserById(Guid id);
         Task<User> GetActiveORDeActiveUserById(Guid id);

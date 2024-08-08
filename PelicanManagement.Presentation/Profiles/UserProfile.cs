@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using PelicanManagement.Domain.Dtos.Common;
 using PelicanManagement.Domain.Dtos.Permissions;
 using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Dtos.User;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
+using PelicanManagement.Domain.Entities.PelicanManagement.Common;
+using PelicanManagement.Domain.Enums;
 
 namespace PelicanManagement.Presentation.Profiles
 {
@@ -14,6 +17,8 @@ namespace PelicanManagement.Presentation.Profiles
             .ForMember(dest => dest.Token, opt => opt.Ignore())
                 .ReverseMap();
 
+
+            CreateMap<UserActivityLog, UserActivityLogDto>();
 
             CreateMap<User, AddUserDto>().ReverseMap()
              .ForMember(dest => dest.Password, opt => opt.MapFrom(src =>

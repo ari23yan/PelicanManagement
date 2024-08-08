@@ -11,6 +11,7 @@ using PelicanManagement.Application.Utilities;
 using PelicanManagement.Domain.Dtos.Common.AccessLog;
 using PelicanManagement.Domain.Enums;
 using PelicanManagement.Domain.Entities.PelicanManagement.Common;
+using PelicanManagement.Domain.Dtos.Common;
 
 namespace PelicanManagement.Application.Services.Implementations
 {
@@ -19,9 +20,10 @@ namespace PelicanManagement.Application.Services.Implementations
         private protected IRepository<ApplicationLog> _logRepository;
         private readonly IRepository<UserActivityLog> _usersAccessLogRepository;
 
-        public LogService(IRepository<ApplicationLog> repository)
+        public LogService(IRepository<ApplicationLog> repository, IRepository<UserActivityLog> userActivityLogRepository)
         {
-                _logRepository = repository;    
+            _logRepository = repository;
+            _usersAccessLogRepository = userActivityLogRepository;
         }
 
         public async void InsertLog(string ip, string controllerName, string actionName, string userAgent, Exception ex)
@@ -41,8 +43,22 @@ namespace PelicanManagement.Application.Services.Implementations
             await _logRepository.AddAsync(log);
         }
 
+        public async Task<bool> InsertUserActivityLog(UserActivityLogDto userActivityLogDto)
+        {
+            UserActivityLog log = new UserActivityLog
+            {
+                Description = UtilityManager.GetActivityLogDescription(userActivityLogDto),
+                Timestamp = DateTime.Now,
+                UserActivityLogTypeId = ((long)userActivityLogDto.UserActivityLogTypeId),
+                UserId = userActivityLogDto.UserId,
+                NewValues = userActivityLogDto.NewValues == null ? null : userActivityLogDto.NewValues,
+                OldValues = userActivityLogDto.OldValues == null ? null : userActivityLogDto.OldValues
+            };
+            await _usersAccessLogRepository.AddAsync(log);
+            return true;
+        }
 
-       
 
+     
     }
 }

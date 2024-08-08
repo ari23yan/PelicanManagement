@@ -120,6 +120,7 @@ namespace PelicanManagement.Application.Services.Implementations
             request.Password = _passwordHasher.EncodePasswordMd5(request.Password);
             var mappedUser = _mapper.Map<User>(request);
             await _userRepository.AddAsync(mappedUser);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId,NewValues = request.Username, UserActivityLogTypeId = ActivityLogType.CreateUser });
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
         public async Task<ResponseDto<bool>> DeleteUserByUserId(Guid userId, Guid operatorId)
@@ -133,7 +134,10 @@ namespace PelicanManagement.Application.Services.Implementations
             user.DeletedDate = DateTime.UtcNow;
             user.DeletedBy = operatorId;
             await _userRepository.UpdateAsync(user);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId,NewValues = user.Username, UserActivityLogTypeId = ActivityLogType.DeleteUser });
+
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
+
         }
         public async Task<ResponseDto<bool>> ToggleActiveStatusByUserId(Guid userId, Guid operatorId)
         {
@@ -147,6 +151,8 @@ namespace PelicanManagement.Application.Services.Implementations
             user.ModifiedDate = DateTime.UtcNow;
             user.ModifiedBy = operatorId;
             await _userRepository.UpdateAsync(user);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId,OldValues=user.Username,NewValues= user.IsActive == false ? "غیر فعال" : "فعال" , UserActivityLogTypeId = ActivityLogType.ActiveOrDeActiveUser });
+
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
@@ -185,8 +191,8 @@ namespace PelicanManagement.Application.Services.Implementations
             mappedUser.ModifiedBy = operatorId;
             mappedUser.IsModified = true;
             await _userRepository.UpdateAsync(mappedUser);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId,NewValues = mappedUser.Username, UserActivityLogTypeId = ActivityLogType.UpdateUser });
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
-
         }
 
 
@@ -198,6 +204,7 @@ namespace PelicanManagement.Application.Services.Implementations
                 return new ResponseDto<UserDetailDto> { IsSuccessFull = false, Message = ErrorsMessages.NotFound };
             }
 
+            var userActivitiesDto = await _userRepository.GetActivitiesLogByUserId(userId);
             var userDetailDto = _mapper.Map<UserDetailDto>(user);
 
             var allMenus = await _roleRepository.GetMenusList();
@@ -208,6 +215,7 @@ namespace PelicanManagement.Application.Services.Implementations
             var userRolePermissions = user.Role.RolePermissions.Select(x => x.PermissionId).ToList();
             userDetailDto.Menus = roleMenu;
             userDetailDto.AllRoles = allRoles.Data.ToList();
+            userDetailDto.UserActivities = _mapper.Map<List<UserActivityLogDto>>(userActivitiesDto);
 
             var allPermission = allPermissions
                .Select(g => new PermissionsDto

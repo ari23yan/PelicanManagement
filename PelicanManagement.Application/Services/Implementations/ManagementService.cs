@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using PelicanManagement.Application.Security;
 using PelicanManagement.Application.Services.Interfaces;
+using PelicanManagement.Domain.Dtos.Common;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
 using PelicanManagement.Domain.Dtos.Management.IdentityServer;
@@ -10,6 +11,7 @@ using PelicanManagement.Domain.Dtos.User;
 using PelicanManagement.Domain.Entities.IdentityServer;
 using PelicanManagement.Domain.Entities.Pelican;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
+using PelicanManagement.Domain.Enums;
 using PelicanManagement.Domain.Interfaces;
 using PelicanManagement.Domain.Interfaces.Management;
 using System;
@@ -25,19 +27,19 @@ namespace PelicanManagement.Application.Services.Implementations
     public class ManagementService : IManagementService
     {
         private readonly IIdentityServerRepository _identityServer;
+        private readonly ILogService _logService;
+
         private readonly IPelicanRepository _pelicanRepository;
         private readonly IPelicanGenericRepository<Domain.Entities.Pelican.UserPermission> _permissionGenericRepository;
         private readonly IPelicanGenericRepository<Domain.Entities.Pelican.UsersUnit> _unitGenericRepository;
         private readonly IPasswordHasher<Domain.Entities.IdentityServer.User> _passwordHasher;
-
-
         private readonly IMapper _mapper;
 
         public ManagementService(IIdentityServerRepository identityServerRepository,
             IPasswordHasher<Domain.Entities.IdentityServer.User> passwordHasher,
             IPelicanGenericRepository<Domain.Entities.Pelican.UsersUnit> unitGenericRepository,
             IPelicanGenericRepository<Domain.Entities.Pelican.UserPermission> permissionGenericRepository,
-            IMapper mapper, IPelicanRepository pelicanRepository)
+            IMapper mapper, IPelicanRepository pelicanRepository,ILogService logService)
         {
             _identityServer = identityServerRepository;
             _pelicanRepository = pelicanRepository;
@@ -45,6 +47,7 @@ namespace PelicanManagement.Application.Services.Implementations
             _passwordHasher = passwordHasher;
             _permissionGenericRepository = permissionGenericRepository;
             _unitGenericRepository = unitGenericRepository;
+            _logService = logService;
         }
 
         public async Task<ResponseDto<bool>> AddUser(AddIdentityUserDto request, Guid operatorId)
@@ -75,6 +78,8 @@ namespace PelicanManagement.Application.Services.Implementations
                     await _unitGenericRepository.AddAsync(userUnits);
                 }
             }
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = mappedUser.UserName, UserActivityLogTypeId = ActivityLogType.CreatePelicanUser });
+
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
@@ -89,7 +94,7 @@ namespace PelicanManagement.Application.Services.Implementations
 
             var units = await _pelicanRepository.GetUserUnits(user.UserName);
             if(units != null)
-            {
+            { 
                 foreach (var item in units)
                 {
                     await _unitGenericRepository.Remove(item);
@@ -104,6 +109,7 @@ namespace PelicanManagement.Application.Services.Implementations
                     await _permissionGenericRepository.Remove(item);
                 }
             }
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = user.UserName, UserActivityLogTypeId = ActivityLogType.DeletePelicanUser });
 
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
@@ -180,6 +186,8 @@ namespace PelicanManagement.Application.Services.Implementations
                     await _unitGenericRepository.AddAsync(userUnits);
                 }
             }
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = mappedUser.UserName, UserActivityLogTypeId = ActivityLogType.UpdatePelicanUser });
+
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 

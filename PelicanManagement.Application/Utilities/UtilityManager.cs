@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
+using PelicanManagement.Domain.Dtos.Common;
+using PelicanManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -30,7 +32,7 @@ namespace PelicanManagement.Application.Utilities
             string mobilePattern = @"^09\d{9}$";
             return Regex.IsMatch(input, mobilePattern);
         }
-        public static bool IsMail (string input)
+        public static bool IsMail(string input)
         {
             string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
             return Regex.IsMatch(input, emailPattern);
@@ -77,6 +79,38 @@ namespace PelicanManagement.Application.Utilities
             var user = httpContextAccessor.HttpContext.User;
             return Guid.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
         }
+        public static string GetActivityLogDescription(UserActivityLogDto userActivityLogDto)
+        {
+            switch (userActivityLogDto.UserActivityLogTypeId)
+            {
+                case ActivityLogType.CreateUser:
+                    return " ایجاد کاربر جدید با نام کاربری " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.DeleteUser:
+                    return " حذف کاربر " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.UpdateUser:
+                    return " بروزرسانی کاربر " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.ActiveOrDeActiveUser:
+                    return userActivityLogDto.NewValues +" " + " سازی کاربر  " + userActivityLogDto.OldValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.CreateRole:
+                    return " ایجاد نقش جدید با نام " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.DeleteRole:
+                    return " حذف نقش " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.UpdateRole:
+                    return " بروزرسانی نقش " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.ActiveOrDeActiveRole:
+                    return userActivityLogDto.NewValues + " " + " سازی نقش " + userActivityLogDto.OldValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.CreatePelicanUser:
+                    return " ایجاد کاربر پلیکان جدید با نام " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.DeletePelicanUser:
+                    return " حذف کاربر پلیکان " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.UpdatePelicanUser:
+                    return " بروزرسانی کاربر پلیکان " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.ActiveOrDeActivePelicanUser:
+                    return userActivityLogDto.NewValues + " سازی کاربر پلیکان " + userActivityLogDto.OldValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                default:
+                    return string.Empty;
+            }
+        }
 
         public static string EncodePasswordMd5(string pass)
         {
@@ -99,7 +133,7 @@ namespace PelicanManagement.Application.Utilities
             int day = persianCalendar.GetDayOfMonth(date);
 
             // Format the date as "yyyy/MM/dd"
-            return $"{year:0000}/{month:00}/{day:00}";
+            return $"{year:0000}/{month:00}/{day:00} ";
         }
 
         public static string GregorianDateTimeToPersianDate(DateTime date)
@@ -200,7 +234,7 @@ namespace PelicanManagement.Application.Utilities
             "یکشنبه", "دوشنبه", "سه‌شنبه", "چهارشنبه", "پنج‌شنبه", "جمعه", "شنبه"
         };
 
-      
+
 
 
 

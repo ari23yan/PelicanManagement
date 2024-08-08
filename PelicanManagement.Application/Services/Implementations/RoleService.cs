@@ -16,6 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
+using PelicanManagement.Domain.Enums;
 
 namespace PelicanManagement.Application.Services.Implementations
 {
@@ -276,6 +277,7 @@ namespace PelicanManagement.Application.Services.Implementations
                 newPermisisonList.Add(newMenu);
             }
             await _rolePermisionRepository.AddRangeAsync(newPermisisonList);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = request.RoleName_Farsi, UserActivityLogTypeId = ActivityLogType.CreateRole });
 
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
@@ -320,11 +322,11 @@ namespace PelicanManagement.Application.Services.Implementations
                 await _rolePermisionRepository.AddRangeAsync(newPermisisonList);
             }
 
-
             var mappedRole = _mapper.Map(request, role);
             mappedRole.ModifiedBy = operatorId;
             mappedRole.IsModified = true;
             await _roleRepository.UpdateAsync(mappedRole);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = mappedRole.RoleName_Farsi, UserActivityLogTypeId = ActivityLogType.UpdateUser });
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
@@ -339,6 +341,8 @@ namespace PelicanManagement.Application.Services.Implementations
             user.DeletedDate = DateTime.UtcNow;
             user.DeletedBy = operatorId;
             await _roleRepository.UpdateAsync(user);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = user.RoleName_Farsi, UserActivityLogTypeId = ActivityLogType.DeleteRole });
+
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
@@ -354,6 +358,8 @@ namespace PelicanManagement.Application.Services.Implementations
             user.ModifiedDate = DateTime.UtcNow;
             user.ModifiedBy = operatorId;
             await _roleRepository.UpdateAsync(user);
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, OldValues = user.RoleName_Farsi, NewValues = user.IsActive == false ? "غیر فعال" : "فعال", UserActivityLogTypeId = ActivityLogType.ActiveOrDeActiveRole });
+
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
     }

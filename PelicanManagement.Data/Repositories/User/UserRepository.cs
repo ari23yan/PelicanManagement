@@ -98,5 +98,10 @@ namespace PelicanManagement.Data.Repositories
             responseDto.List = await pagedQuery.ToListAsync();
             return responseDto;
         }
+
+        public async Task<List<UserActivityLog>> GetActivitiesLogByUserId(Guid userId)
+        {
+            return await Context.UserActivityLogs.Where(x => x.UserId == userId).Take(10).ToListAsync();
+        }
     }
 }

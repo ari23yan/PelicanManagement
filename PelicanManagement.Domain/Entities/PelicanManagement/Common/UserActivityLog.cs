@@ -15,18 +15,14 @@ namespace PelicanManagement.Domain.Entities.PelicanManagement.Common
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
         [MaxLength(100)]
-        public string UserName { get; set; }
         public long UserActivityLogTypeId { get; set; }
         public UserActivityLogType UserActivityLogType { get; set; }
         public DateTime Timestamp { get; set; }
-        [MaxLength(500)]
-        public string EntityType { get; set; }
-        public int EntityId { get; set; }
+        [MaxLength(5000)]
+        public string? OldValues { get; set; }
+        [MaxLength(5000)]
+        public string? NewValues { get; set; }
         [MaxLength(1024)]
-        public string OldValues { get; set; }
-        [MaxLength(1024)]
-        public string NewValues { get; set; }
-        [MaxLength(1024)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using PelicanManagement.Domain.Dtos.Permissions;
+﻿using PelicanManagement.Domain.Dtos.Common;
+using PelicanManagement.Domain.Dtos.Permissions;
 using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Enums;
 using System;
@@ -33,5 +34,6 @@ namespace PelicanManagement.Domain.Dtos.User
         public List<PermissionsDto> Permissions { get; set; }
         public List<RoleMenusDto> Menus { get; set; }
         public List<RolesListDto> AllRoles { get; set; }
+        public List<UserActivityLogDto> UserActivities { get; set; }
     }
 }
