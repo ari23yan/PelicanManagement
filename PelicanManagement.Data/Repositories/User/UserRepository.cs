@@ -14,6 +14,8 @@ using System.Reflection;
 using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
+using PelicanManagement.Domain.Dtos.Common;
+using PelicanManagement.Domain.Dtos.UserActivity;
 
 namespace PelicanManagement.Data.Repositories
 {
@@ -102,6 +104,42 @@ namespace PelicanManagement.Data.Repositories
         public async Task<List<UserActivityLog>> GetActivitiesLogByUserId(Guid userId)
         {
             return await Context.UserActivityLogs.Where(x => x.UserId == userId).Take(10).ToListAsync();
+        }
+
+        public async Task<ListResponseDto<UserActivityDto>> GetPaginatedUserActivityList(PaginationDto paginationRequest)
+        {
+            ListResponseDto<UserActivityDto> responseDto = new ListResponseDto<UserActivityDto>();
+
+            var skipCount = (paginationRequest.PageNumber - 1) * paginationRequest.PageSize;
+
+                IQueryable<UserActivityDto> query = (from activity in Context.UserActivityLogs
+                              join user in Context.Users on activity.UserId equals user.Id
+                              select new UserActivityDto
+                              {
+                                  NewValues = activity.NewValues,
+                                  OldValues = activity.OldValues,
+                                  Description = activity.Description,
+                                  Timestamp = activity.Timestamp,
+                                  UserActivityLogTypeId = activity.UserActivityLogTypeId,
+                                  UserId = activity.UserId,
+                                  Username = user.Username,
+                              }
+                              ).Distinct();
+            ;
+
+            if (!string.IsNullOrWhiteSpace(paginationRequest.Searchkey))
+            {
+                query = query.Where(u => u.NewValues.Contains(paginationRequest.Searchkey) || u.Username.Contains(paginationRequest.Searchkey) || u.OldValues.Contains(paginationRequest.Searchkey));
+            }
+
+            query = paginationRequest.FilterType == FilterType.Asc ?
+                query.OrderBy(u => u.Timestamp) :
+                query.OrderByDescending(u => u.Timestamp);
+
+            responseDto.TotalCount = await query.CountAsync();
+            var pagedQuery = query.Skip(skipCount).Take(paginationRequest.PageSize);
+            responseDto.List = await pagedQuery.ToListAsync();
+            return responseDto;
         }
     }
 }

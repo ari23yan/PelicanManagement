@@ -107,11 +107,24 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "DatawareDoctorsTransfer v1");
+        c.RoutePrefix = string.Empty; // Change this if you want Swagger UI at a different URL
+    });
 }
-
-app.UseHttpsRedirection();
+else
+{
+    // In production, you can specify different URL and RoutePrefix if needed
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "DatawareDoctorsTransfer v1");
+        c.RoutePrefix = "swagger"; // Change this if you want Swagger UI at a different URL
+    });
+}
 
 app.UseAuthorization();
 

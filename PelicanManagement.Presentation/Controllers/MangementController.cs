@@ -33,11 +33,10 @@ namespace PelicanManagement.Presentation.Controllers
 
 
 
-        #region Identity4Server
 
 
         [HttpGet]
-        //[PermissionChecker(Permission = PermissionType.GetUserList)]
+        [PermissionChecker(Permission = PermissionType.GetPelicanUsersList)]
         [Route("management/identity/list")]
         public async Task<IActionResult> List([FromQuery] PaginationDto request)
         {
@@ -66,7 +65,7 @@ namespace PelicanManagement.Presentation.Controllers
 
         [HttpPost]
         [Route("management/identity/get")]
-        //[PermissionChecker(Permission = PermissionType.GetRole)]
+        [PermissionChecker(Permission = PermissionType.GetPelicanUser)]
         public async Task<IActionResult> Get([FromBody] GetUserRequest request)
         {
             try
@@ -93,7 +92,7 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
         [HttpPost]
-        //[PermissionChecker(Permission = PermissionType.AddRole)]
+        [PermissionChecker(Permission = PermissionType.AddPelicanUser)]
         [Route("management/identity/add")]
         public async Task<IActionResult> Add([FromBody] AddIdentityUserDto request)
         {
@@ -123,7 +122,7 @@ namespace PelicanManagement.Presentation.Controllers
 
 
         [HttpDelete]
-        //[PermissionChecker(Permission = PermissionType.DeleteRole)]
+        [PermissionChecker(Permission = PermissionType.DeletePelicanUser)]
         [Route("management/identity/delete")]
         public async Task<IActionResult> Delete([FromBody] DeleteUserRequest request)
         {
@@ -153,7 +152,7 @@ namespace PelicanManagement.Presentation.Controllers
 
 
         [HttpPut]
-        //[PermissionChecker(Permission = PermissionType.UpdateRole)]
+        [PermissionChecker(Permission = PermissionType.UpdatePelicanUser)]
         [Route("management/identity/update")]
         public async Task<IActionResult> Update([FromQuery] int userId, [FromBody] UpdateIdentityUserDto request)
         {
@@ -212,49 +211,15 @@ namespace PelicanManagement.Presentation.Controllers
         }
 
 
-        #endregion
 
-
-        #region Pelican
-
-        [HttpGet]
+        //[HttpGet]
         //[PermissionChecker(Permission = PermissionType.GetUserList)]
-        [Route("management/pelican/list")]
-        public async Task<IActionResult> PelicanList([FromQuery] PaginationDto request)
-        {
-            try
-            {
-                var result = await _managementService.GetPelicanPaginatedUsersList(request);
-                return Ok(result);
-            }
-            catch (Exception ex)
-            {
-                #region Inserting Log 
-                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
-                {
-
-                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
-                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-                    var routeData = ControllerContext.RouteData;
-                    var controllerName = routeData.Values["controller"]?.ToString();
-                    var actionName = routeData.Values["action"]?.ToString();
-                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
-                }
-                #endregion
-                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
-            }
-        }
-
-
-
-        //[HttpPost]
-        //[Route("management/pelican/get")]
-        ////[PermissionChecker(Permission = PermissionType.GetRole)]
-        //public async Task<IActionResult> PelicaGet(string userId)
+        //[Route("management/pelican/list")]
+        //public async Task<IActionResult> PelicanList([FromQuery] PaginationDto request)
         //{
         //    try
         //    {
-        //        var result = await _managementService.GetUserByUserId(userId);
+        //        var result = await _managementService.GetPelicanPaginatedUsersList(request);
         //        return Ok(result);
         //    }
         //    catch (Exception ex)
@@ -274,7 +239,7 @@ namespace PelicanManagement.Presentation.Controllers
         //        return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
         //    }
         //}
-        #endregion
+
 
     }
 }

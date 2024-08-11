@@ -47,7 +47,7 @@ namespace PelicanManagement.Application.Services.Implementations
             }
             var allPermissions = await _roleRepository.GetAllPermissions();
             var userRolePermissions = role.RolePermissions.Select(x => x.PermissionId).ToList();
-            var rolePermissions = allPermissions
+            var rolePermissions = allPermissions.OrderBy(x => x.CreatedDate)
            .Select(g => new PermissionsDto
            {
                Id = g.Id,
@@ -211,7 +211,7 @@ namespace PelicanManagement.Application.Services.Implementations
             var permissons = await _roleRepository.GetRolePermissions(dto.TargetId.Value);
             var allPermissions = await _roleRepository.GetAllPermissions();
             var userRolePermissions = permissons.Select(x => x.Id).ToList();
-            var rolePermissions = allPermissions
+            var rolePermissions = allPermissions.OrderBy(x => x.CreatedDate)
            .Select(g => new PermissionsDto
            {
                Id = g.Id,
@@ -326,7 +326,7 @@ namespace PelicanManagement.Application.Services.Implementations
             mappedRole.ModifiedBy = operatorId;
             mappedRole.IsModified = true;
             await _roleRepository.UpdateAsync(mappedRole);
-            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = mappedRole.RoleName_Farsi, UserActivityLogTypeId = ActivityLogType.UpdateUser });
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId, NewValues = mappedRole.RoleName_Farsi, UserActivityLogTypeId = ActivityLogType.UpdateRole });
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 

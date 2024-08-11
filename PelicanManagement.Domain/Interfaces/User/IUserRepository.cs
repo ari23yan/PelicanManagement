@@ -1,6 +1,7 @@
 ﻿using PelicanManagement.Domain.Dtos.Common.Pagination;
 using PelicanManagement.Domain.Dtos.Common.ResponseModel;
 using PelicanManagement.Domain.Dtos.User;
+using PelicanManagement.Domain.Dtos.UserActivity;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using PelicanManagement.Domain.Entities.PelicanManagement.Account;
 using PelicanManagement.Domain.Entities.PelicanManagement.Common;
@@ -28,6 +29,7 @@ namespace PelicanManagement.Domain.Interfaces
         Task<User> GetActiveORDeActiveUserById(Guid id);
         Task<bool> CheckUserHavePermission(Guid roleId, Guid permissionId);
         Task<ListResponseDto<User>> GetPaginatedUsersList(PaginationDto request);
+        Task<ListResponseDto<UserActivityDto>> GetPaginatedUserActivityList(PaginationDto request);
 
     }
 }

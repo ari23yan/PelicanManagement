@@ -12,6 +12,10 @@ using PelicanManagement.Domain.Dtos.Common.AccessLog;
 using PelicanManagement.Domain.Enums;
 using PelicanManagement.Domain.Entities.PelicanManagement.Common;
 using PelicanManagement.Domain.Dtos.Common;
+using PelicanManagement.Domain.Dtos.Common.ResponseModel;
+using PelicanManagement.Domain.Dtos.UserActivity;
+using PelicanManagement.Domain.Dtos.Common.Pagination;
+using PelicanManagement.Domain.Dtos.User;
 
 namespace PelicanManagement.Application.Services.Implementations
 {
@@ -19,11 +23,14 @@ namespace PelicanManagement.Application.Services.Implementations
     {
         private protected IRepository<ApplicationLog> _logRepository;
         private readonly IRepository<UserActivityLog> _usersAccessLogRepository;
+        private readonly IUserRepository _userRepository;
 
-        public LogService(IRepository<ApplicationLog> repository, IRepository<UserActivityLog> userActivityLogRepository)
+
+        public LogService(IRepository<ApplicationLog> repository, IUserRepository userRepository, IRepository<UserActivityLog> userActivityLogRepository)
         {
             _logRepository = repository;
             _usersAccessLogRepository = userActivityLogRepository;
+            _userRepository = userRepository;
         }
 
         public async void InsertLog(string ip, string controllerName, string actionName, string userAgent, Exception ex)
@@ -58,7 +65,17 @@ namespace PelicanManagement.Application.Services.Implementations
             return true;
         }
 
-
-     
+        public async Task<ResponseDto<IEnumerable<UserActivityDto>>> GetPaginatedRolesList(PaginationDto request)
+        {
+            var activities = await _userRepository.GetPaginatedUserActivityList(request);
+            return new ResponseDto<IEnumerable<UserActivityDto>>
+            {
+                IsSuccessFull = true,
+                Data = activities.List,
+                Message = ErrorsMessages.OperationSuccessful,
+                Status = "SuccessFul",
+                TotalCount = activities.TotalCount
+            };
+        }
     }
 }
