@@ -79,6 +79,36 @@ namespace PelicanManagement.Application.Utilities
             var user = httpContextAccessor.HttpContext.User;
             return Guid.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
         }
+
+
+
+        public static string EntityChanges<T>(T firstOne, T secondOne)
+        {
+            if (firstOne == null || secondOne == null)
+            {
+                throw new ArgumentNullException("Both entities must be non-null.");
+            }
+
+            Type entityType = typeof(T);
+            PropertyInfo[] properties = entityType.GetProperties();
+            StringBuilder changes = new StringBuilder();
+
+            foreach (var property in properties)
+            {
+                var firstValue = property.GetValue(firstOne);
+                var secondValue = property.GetValue(secondOne);
+
+                if (!Equals(firstValue, secondValue))
+                {
+                    changes.AppendLine($"{property.Name} changed from '{firstValue}' to '{secondValue}'");
+                }
+            }
+
+            return changes.Length > 0 ? changes.ToString() : "No changes detected.";
+        }
+
+
+
         public static string GetActivityLogDescription(UserActivityLogDto userActivityLogDto)
         {
             switch (userActivityLogDto.UserActivityLogTypeId)

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Newtonsoft.Json;
 using PelicanManagement.Application.Security;
 using PelicanManagement.Application.Senders;
 using PelicanManagement.Application.Services.Interfaces;
@@ -187,11 +188,17 @@ namespace PelicanManagement.Application.Services.Implementations
             }
 
 
+            var originalUser = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(user));
+
+
+
             var mappedUser = _mapper.Map(request, user);
             mappedUser.ModifiedBy = operatorId;
             mappedUser.IsModified = true;
+            var changes = UtilityManager.EntityChanges(originalUser, mappedUser);
+
             await _userRepository.UpdateAsync(mappedUser);
-            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId,NewValues = mappedUser.Username, UserActivityLogTypeId = ActivityLogType.UpdateUser });
+            await _logService.InsertUserActivityLog(new UserActivityLogDto { UserId = operatorId,OldValues= changes, NewValues = mappedUser.Username, UserActivityLogTypeId = ActivityLogType.UpdateUser });
             return new ResponseDto<bool> { IsSuccessFull = true, Message = ErrorsMessages.OperationSuccessful };
         }
 
