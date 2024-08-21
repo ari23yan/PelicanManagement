@@ -15,6 +15,7 @@ namespace PelicanManagement.Domain.Interfaces.Management
     {
         Task<ListResponseDto<ApiUser>> GetPaginatedUsersList(PaginationDto request);
         Task<ApiUser> Get(string userId);
+        Task<ApiUser> GetByUsername(string username);
 
 
         Task<List<PelicanUserPermissionsDto>> GetUserPermissionsByUsername(string username);

@@ -110,5 +110,10 @@ namespace PelicanManagement.Data.Repositories.Management
 
             return result;
         }
+
+        public async Task<ApiUser> GetByUsername(string username)
+        {
+            return await Context.ApiUsers.FirstOrDefaultAsync(x => x.UserName == username);
+        }
     }
 }

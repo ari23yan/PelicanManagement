@@ -34,15 +34,14 @@ namespace PelicanManagement.Presentation.Controllers
 
 
 
-
         [HttpGet]
         [PermissionChecker(Permission = PermissionType.GetPelicanUsersList)]
         [Route("management/identity/list")]
-        public async Task<IActionResult> List([FromQuery] PaginationDto request)
+        public async Task<IActionResult> List([FromQuery] PaginationDto request, UserType type)
         {
             try
             {
-                var result = await _managementService.GetPaginatedUsersList(request);
+                var result = await _managementService.GetPaginatedUsersList(request,type);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -91,15 +90,16 @@ namespace PelicanManagement.Presentation.Controllers
             }
         }
 
+
+
         [HttpPost]
-        [PermissionChecker(Permission = PermissionType.AddPelicanUser)]
-        [Route("management/identity/add")]
-        public async Task<IActionResult> Add([FromBody] AddIdentityUserDto request)
+        [Route("management/identity/get-teriage-user")]
+        [PermissionChecker(Permission = PermissionType.GetPelicanUser)]
+        public async Task<IActionResult> GetTeriageUser([FromBody] GetUserRequest request)
         {
             try
             {
-                var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
-                var result = await _managementService.AddUser(request, currentUser);
+                var result = await _managementService.GetTeriageUserDetailByUserId(request.Username);
                 return Ok(result);
             }
             catch (Exception ex)
@@ -120,6 +120,34 @@ namespace PelicanManagement.Presentation.Controllers
             }
         }
 
+        [HttpPost]
+        [PermissionChecker(Permission = PermissionType.AddPelicanUser)]
+        [Route("management/identity/add")]
+        public async Task<IActionResult> Add([FromBody] AddIdentityUserDto request, UserType type)
+        {
+            try
+            {
+                var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
+                var result = await _managementService.AddUser(request, currentUser,type);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                #region Inserting Log 
+                if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
+                {
+
+                    var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
+                    var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
+                    var routeData = ControllerContext.RouteData;
+                    var controllerName = routeData.Values["controller"]?.ToString();
+                    var actionName = routeData.Values["action"]?.ToString();
+                    _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
+                }
+                #endregion
+                return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
+            }
+        }
 
         [HttpDelete]
         [PermissionChecker(Permission = PermissionType.DeletePelicanUser)]
@@ -182,7 +210,6 @@ namespace PelicanManagement.Presentation.Controllers
 
 
 
-
         [HttpGet]
         [Route("management/get-permissons-and-units-list")]  // For ComboList
         public async Task<IActionResult> GetPermissionsAndUnits()
@@ -210,35 +237,7 @@ namespace PelicanManagement.Presentation.Controllers
             }
         }
 
-
-
-        //[HttpGet]
-        //[PermissionChecker(Permission = PermissionType.GetUserList)]
-        //[Route("management/pelican/list")]
-        //public async Task<IActionResult> PelicanList([FromQuery] PaginationDto request)
-        //{
-        //    try
-        //    {
-        //        var result = await _managementService.GetPelicanPaginatedUsersList(request);
-        //        return Ok(result);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        #region Inserting Log 
-        //        if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
-        //        {
-
-        //            var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
-        //            var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
-        //            var routeData = ControllerContext.RouteData;
-        //            var controllerName = routeData.Values["controller"]?.ToString();
-        //            var actionName = routeData.Values["action"]?.ToString();
-        //            _logService.InsertLog(userIp, controllerName, actionName, userAgent, ex);
-        //        }
-        //        #endregion
-        //        return Ok(new ResponseDto<Exception> { IsSuccessFull = false, Data = ex, Message = ErrorsMessages.InternalServerError, Status = "Internal Server Error" });
-        //    }
-        //}
+   
 
 
     }

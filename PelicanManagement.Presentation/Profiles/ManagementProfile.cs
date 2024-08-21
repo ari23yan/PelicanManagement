@@ -3,6 +3,7 @@ using PelicanManagement.Application.Utilities;
 using PelicanManagement.Domain.Dtos.Management.IdentityServer;
 using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Entities.IdentityServer;
+using PelicanManagement.Domain.Entities.Pelican;
 
 namespace PelicanManagement.Presentation.Profiles
 {
@@ -27,7 +28,24 @@ namespace PelicanManagement.Presentation.Profiles
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
 
-             CreateMap<User, UpdateIdentityUserDto>()
+
+
+            CreateMap<AddIdentityUserDto, ApiUser>()
+           .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+           .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.FirstName + "" + src.LastName))
+           .ForMember(dest => dest.SecurityStamp, opt => opt.MapFrom(src => UtilityManager.GenerateSecurityStamp()))
+           .ReverseMap()
+           .ForMember(dest => dest.PhoneNumber, opt => opt.Ignore())
+           .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())
+           .ForMember(dest => dest.TwoFactorEnabled, opt => opt.Ignore())
+           .ForMember(dest => dest.LockoutEnabled, opt => opt.Ignore())
+           .ForMember(dest => dest.LockoutEnd, opt => opt.Ignore())
+           .ForMember(dest => dest.Email, opt => opt.Ignore())
+           .ForMember(dest => dest.EmailConfirmed, opt => opt.Ignore())
+           .ForMember(dest => dest.Password, opt => opt.Ignore());
+
+
+            CreateMap<User, UpdateIdentityUserDto>()
                .ForMember(dest => dest.PermissionIds, opt => opt.Ignore())
                .ForMember(dest => dest.UnitIds, opt => opt.Ignore())
                .ForMember(dest => dest.Password, opt => opt.Ignore())

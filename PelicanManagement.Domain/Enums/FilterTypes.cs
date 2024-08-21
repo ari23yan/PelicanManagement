@@ -13,6 +13,5 @@ namespace PelicanManagement.Domain.Enums
         Desc,
         [Display(Name = "Filter By Created Date Asc")]
         Asc,
-    
     }
 }

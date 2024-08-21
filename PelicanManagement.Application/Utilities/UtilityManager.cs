@@ -105,8 +105,12 @@ namespace PelicanManagement.Application.Utilities
                     return " حذف کاربر پلیکان " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
                 case ActivityLogType.UpdatePelicanUser:
                     return " بروزرسانی کاربر پلیکان " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
-                case ActivityLogType.ActiveOrDeActivePelicanUser:
-                    return userActivityLogDto.NewValues + " سازی کاربر پلیکان " + userActivityLogDto.OldValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.CreateTeriageUser:
+                    return " ایجاد کاربر تریاژ جدید با نام " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.DeleteTeriageUser:
+                    return " حذف کاربر تریاژ " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.UpdateTeriageUser:
+                    return " بروزرسانی کاربر تریاژ " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
                 default:
                     return string.Empty;
             }

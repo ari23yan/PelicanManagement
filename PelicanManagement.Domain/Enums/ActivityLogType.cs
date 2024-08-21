@@ -15,15 +15,20 @@ namespace PelicanManagement.Domain.Enums
 
 
         CreateRole,
-        DeleteRole,
         UpdateRole,
-        ActiveOrDeActiveRole,
+        DeleteRole,
+        ActiveOrDeActiveRole=9,
 
 
         CreatePelicanUser,
         DeletePelicanUser,
         UpdatePelicanUser,
-        ActiveOrDeActivePelicanUser,
+
+
+
+        CreateTeriageUser,
+        DeleteTeriageUser,
+        UpdateTeriageUser,
 
     }
 }

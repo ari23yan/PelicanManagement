@@ -35,6 +35,7 @@ namespace PelicanManagement.Domain.Dtos.Common.ResponseModel
         public static string EmailNotConfirmed = "ایمیل شما تأیید نشده است. لطفاً ایمیل خود را تأیید فرمایید.";
         public static string MenusIsNotValid = "خطا،انتخاب منو برای نقش الزامیست";
         public static string PermissionIsNotValid = "خطا،انتخاب دسترسی برای نقش الزامیست";
+        public static string IsNotTeriageUser = "کاربر مورد نظر برای بخش تریاژ نمی باشد";
 
     }
 }

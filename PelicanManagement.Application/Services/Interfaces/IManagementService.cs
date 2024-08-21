@@ -5,6 +5,7 @@ using PelicanManagement.Domain.Dtos.Role;
 using PelicanManagement.Domain.Dtos.User;
 using PelicanManagement.Domain.Entities.IdentityServer;
 using PelicanManagement.Domain.Entities.Pelican;
+using PelicanManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,19 +16,25 @@ namespace PelicanManagement.Application.Services.Interfaces
 {
     public interface IManagementService
     {
-        Task<ResponseDto<IEnumerable<User>>> GetPaginatedUsersList(PaginationDto request);
+        Task<ResponseDto<IEnumerable<User>>> GetPaginatedUsersList(PaginationDto request, UserType type);
         Task<ResponseDto<IEnumerable<ApiUser>>> GetPelicanPaginatedUsersList(PaginationDto request);
 
 
 
         Task<ResponseDto<IdentityUserDetailDto>> GetUserDetailByUserId(string userId);
+
+
+
+        Task<ResponseDto<PelicanManagement.Domain.Entities.IdentityServer.User>> GetTeriageUserDetailByUserId(string userId);
+
+
         Task<ResponseDto<PermissionsAndUnitsDto>> GetPermissionsAndUnits();
 
 
 
 
 
-        Task<ResponseDto<bool>> AddUser(AddIdentityUserDto requset, Guid operatorId);
+        Task<ResponseDto<bool>> AddUser(AddIdentityUserDto requset, Guid operatorId, UserType type);
         Task<ResponseDto<bool>> DeleteUser(int userID, Guid operatorId);
 
         Task<ResponseDto<bool>> UpdateUser(int userID, UpdateIdentityUserDto request, Guid operatorId);

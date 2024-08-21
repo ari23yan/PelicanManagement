@@ -11,7 +11,7 @@ namespace PelicanManagement.Domain.Dtos.Management.IdentityServer
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Password { get; set; }
-        public string PersoanlCode { get; set; }
+        public string PersonalCode { get; set; }
         public long[] PermissionIds { get; set; }
         public int[] UnitIds { get; set; }
     }

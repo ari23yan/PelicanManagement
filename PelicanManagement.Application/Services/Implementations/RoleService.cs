@@ -261,7 +261,7 @@ namespace PelicanManagement.Application.Services.Implementations
             List<RoleMenu> newMenuList = new List<RoleMenu>();
             foreach (var item in request.MenuIds)
             {
-                var newMenu = new RoleMenu { RoleId = mappedRole.Id, MenuId = item, CreatedBy = operatorId };
+                var newMenu = new RoleMenu {RoleId = mappedRole.Id, MenuId = item, CreatedBy = operatorId };
                 newMenuList.Add(newMenu);
             }
             await _roleMenuRepository.AddRangeAsync(newMenuList);
@@ -300,7 +300,7 @@ namespace PelicanManagement.Application.Services.Implementations
                 List<RoleMenu> newMenuList = new List<RoleMenu>();
                 foreach (var item in request.MenuIds)
                 {
-                    var newMenu = new RoleMenu { RoleId = role.Id, MenuId = item, CreatedBy = operatorId };
+                    var newMenu = new RoleMenu { Id = Guid.NewGuid(), RoleId = role.Id, MenuId = item, CreatedBy = operatorId };
                     newMenuList.Add(newMenu);
                 }
                 await _roleMenuRepository.AddRangeAsync(newMenuList);

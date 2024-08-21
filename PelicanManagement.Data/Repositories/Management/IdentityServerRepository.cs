@@ -18,8 +18,10 @@ namespace PelicanManagement.Data.Repositories.Management
 {
     public class IdentityServerRepository : IdentityServerGenericRepository<Domain.Entities.IdentityServer.User>, IIdentityServerRepository
     {
-        public IdentityServerRepository(IdentityServerDbContext context) : base(context)
+        private readonly IPelicanRepository _pelicanRepository;
+        public IdentityServerRepository(IdentityServerDbContext context, IPelicanRepository pelicanRepository) : base(context)
         {
+            _pelicanRepository = pelicanRepository;
         }
 
         public async Task<Domain.Entities.IdentityServer.User> Get(int userId)
@@ -32,26 +34,36 @@ namespace PelicanManagement.Data.Repositories.Management
             return await Context.Users.FirstOrDefaultAsync(x => x.UserName == username);
         }
 
-        public async Task<ListResponseDto<Domain.Entities.IdentityServer.User>> GetPaginatedUsersList(PaginationDto paginationRequest)
+        public async Task<ListResponseDto<Domain.Entities.IdentityServer.User>> GetPaginatedUsersList(PaginationDto paginationRequest, UserType type)
         {
-            ListResponseDto<Domain.Entities.IdentityServer.User> responseDto = new ListResponseDto<Domain.Entities.IdentityServer.User>();
-
+            var responseDto = new ListResponseDto<Domain.Entities.IdentityServer.User>();
+            var pelicanUsernames = (await _pelicanRepository.GetAllAsync())
+                                  .Select(x => x.UserName)
+                                  .ToHashSet();
             var skipCount = (paginationRequest.PageNumber - 1) * paginationRequest.PageSize;
-            IQueryable<Domain.Entities.IdentityServer.User> query = Context.Users;
 
+            IQueryable<Domain.Entities.IdentityServer.User> query = type == UserType.Pelican
+                ? Context.Users.Where(x => pelicanUsernames.Contains(x.UserName))
+                : Context.Users.Where(x => !pelicanUsernames.Contains(x.UserName));
+
+         
             if (!string.IsNullOrWhiteSpace(paginationRequest.Searchkey))
             {
-                query = query.Where(u => u.LastName.Contains(paginationRequest.Searchkey));
+                query = type == UserType.Pelican
+                    ? query.Where(u => u.LastName.Contains(paginationRequest.Searchkey))
+                    : query.Where(u => u.LastName.Contains(paginationRequest.Searchkey));
             }
 
-            query = paginationRequest.FilterType == FilterType.Asc ?
-                query.OrderBy(u => u.Id) :
-                query.OrderByDescending(u => u.Id);
+
+            query = paginationRequest.FilterType == FilterType.Asc
+                ? query.OrderBy(u => u.Id)
+                : query.OrderByDescending(u => u.Id);
+
             responseDto.TotalCount = await query.CountAsync();
-            var pagedQuery = query.Skip(skipCount).Take(paginationRequest.PageSize);
-            responseDto.List = await pagedQuery.ToListAsync();
+            responseDto.List = await query.Skip(skipCount)
+                                          .Take(paginationRequest.PageSize)
+                                          .ToListAsync();
             return responseDto;
         }
-    
     }
 }
