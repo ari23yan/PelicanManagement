@@ -184,6 +184,7 @@ namespace UsersManagement.Presentation.Controllers
             {
                 var currentUser = UtilityManager.GetCurrentUser(_httpContextAccessor);
                 var result = await _roleService.UpdateRole(roleId, request, currentUser);
+
                 return Ok(result);
             }
             catch (Exception ex)
@@ -191,7 +192,6 @@ namespace UsersManagement.Presentation.Controllers
                 #region Inserting Log 
                 if (_configuration.GetValue<bool>("ApplicationLogIsActive"))
                 {
-
                     var userAgent = _httpContextAccessor.HttpContext?.Request.Headers["User-Agent"];
                     var userIp = _httpContextAccessor.HttpContext?.Connection.RemoteIpAddress?.ToString();
                     var routeData = ControllerContext.RouteData;

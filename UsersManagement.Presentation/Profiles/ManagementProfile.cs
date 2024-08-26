@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using UsersManagement.Application.Utilities;
+using UsersManagement.Domain.Dtos.Management.Dataware;
+using UsersManagement.Domain.Dtos.Management.HisClinic;
 using UsersManagement.Domain.Dtos.Management.IdentityServer;
 using UsersManagement.Domain.Dtos.Role;
+using UsersManagement.Domain.Entities.Dataware;
+using UsersManagement.Domain.Entities.HisClinic;
 using UsersManagement.Domain.Entities.IdentityServer;
 using UsersManagement.Domain.Entities.Pelican;
 
@@ -25,6 +29,24 @@ namespace UsersManagement.Presentation.Profiles
                 .ForMember(dest => dest.LockoutEnd, opt => opt.Ignore())
                 .ForMember(dest => dest.Email, opt => opt.Ignore())
                 .ForMember(dest => dest.EmailConfirmed, opt => opt.Ignore())
+                .ForMember(dest => dest.Password, opt => opt.Ignore());
+
+
+            CreateMap<AddClinicUserDto, ApiUsers>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+            .ForMember(dest => dest.SecurityStamp, opt => opt.MapFrom(src => UtilityManager.GenerateSecurityStamp()))
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.MedicalNo.Length > 5 ? src.MedicalNo.Substring(src.MedicalNo.Length - 5) : src.MedicalNo))
+            .ReverseMap()
+            .ForMember(dest => dest.PhoneNumber, opt => opt.Ignore())
+            .ForMember(dest => dest.Email, opt => opt.Ignore())
+            .ForMember(dest => dest.Password, opt => opt.Ignore());
+
+            CreateMap<AddHisNovinUserDto, AspNetUser>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.NewGuid().ToString()))
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.SecurityStamp, opt => opt.MapFrom(src => UtilityManager.GenerateSecurityStamp()))
+                .ReverseMap()
                 .ForMember(dest => dest.Password, opt => opt.Ignore());
 
 

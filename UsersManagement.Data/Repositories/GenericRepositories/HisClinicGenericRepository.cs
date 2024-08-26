@@ -1,26 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UsersManagement.Data.Context;
-using UsersManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using UsersManagement.Data.Context;
+using UsersManagement.Domain.Interfaces.GenericRepositories;
 
-namespace UsersManagement.Data.Repositories
+namespace UsersManagement.Data.Repositories.GenericRepositories
 {
-    public class IdentityServerGenericRepository<T> : IIdentityServerGenericRepository<T> where T : class
+    public class HisClinicGenericRepository<T> : IHisClinicGenericRepository<T> where T : class
     {
-        protected readonly IdentityServerDbContext Context;
+        protected readonly HisClinicDbContext Context;
         protected DbSet<T> entities;
 
-        public IdentityServerGenericRepository(IdentityServerDbContext context)
+        public HisClinicGenericRepository(HisClinicDbContext context)
         {
             Context = context;
             entities = Context.Set<T>();
         }
-
         public async Task AddAsync(T entity)
         {
             try
@@ -33,7 +32,6 @@ namespace UsersManagement.Data.Repositories
                 throw;
             }
         }
-
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await entities.ToListAsync();
@@ -141,4 +139,3 @@ namespace UsersManagement.Data.Repositories
         }
     }
 }
-

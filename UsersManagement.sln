@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersManagement.Ioc", "User
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersManagement.Presentation", "UsersManagement.Presentation\UsersManagement.Presentation.csproj", "{F02EC374-E6BF-4E41-96DC-C4D77EA319EA}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UsersManagementUi", "UsersManagementUi\UsersManagementUi.csproj", "{84A1F6D6-C2F8-4882-83ED-44B422A67630}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F02EC374-E6BF-4E41-96DC-C4D77EA319EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F02EC374-E6BF-4E41-96DC-C4D77EA319EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F02EC374-E6BF-4E41-96DC-C4D77EA319EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84A1F6D6-C2F8-4882-83ED-44B422A67630}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84A1F6D6-C2F8-4882-83ED-44B422A67630}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84A1F6D6-C2F8-4882-83ED-44B422A67630}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84A1F6D6-C2F8-4882-83ED-44B422A67630}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

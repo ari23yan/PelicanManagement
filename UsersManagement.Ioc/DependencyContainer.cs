@@ -15,6 +15,10 @@ using UsersManagement.Data.Repositories.Management;
 using Microsoft.AspNetCore.Identity;
 using UsersManagement.Domain.Entities.IdentityServer;
 using UsersManagement.Data.Context;
+using UsersManagement.Domain.Interfaces.GenericRepositories;
+using UsersManagement.Data.Repositories.GenericRepositories;
+using UsersManagement.Domain.Entities.HisClinic;
+using UsersManagement.Domain.Entities.Dataware;
 
 
 namespace UsersManagement.Ioc
@@ -26,17 +30,24 @@ namespace UsersManagement.Ioc
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IIdentityServerGenericRepository<>), typeof(IdentityServerGenericRepository<>));
             services.AddScoped(typeof(IPelicanGenericRepository<>), typeof(PelicanGenericRepository<>));
+            services.AddScoped(typeof(IDatawareGenericRepository<>), typeof(DatawareGenericRepository<>));
+            services.AddScoped(typeof(IHisClinicGenericRepository<>), typeof(HisClinicGenericRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IManagementService, ManagementService>();
             services.AddScoped<IPelicanRepository, PelicanRepository>();
+            services.AddScoped<IDatawareRepository, DatawareRepository>();
+            services.AddScoped<IHisClinicRepository, HisClinicRepository>();
+            services.AddScoped<IIdentityServerRepository, IdentityServerRepository>();
             services.AddScoped<IIdentityServerRepository, IdentityServerRepository>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
             services.AddScoped<ISender, Sender>();
             services.AddScoped<ILogService,  LogService>();
             services.AddScoped<IPasswordHasher<Domain.Entities.IdentityServer.User>, PasswordHasher<Domain.Entities.IdentityServer.User>>();
+            services.AddScoped<IPasswordHasher<ApiUsers>,PasswordHasher<ApiUsers>> ();
+            services.AddScoped<IPasswordHasher<AspNetUser>,PasswordHasher<AspNetUser>> ();
         }
     }
 }

@@ -111,6 +111,19 @@ namespace UsersManagement.Application.Utilities
                     return " حذف کاربر تریاژ " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
                 case ActivityLogType.UpdateTeriageUser:
                     return " بروزرسانی کاربر تریاژ " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.CreateClinicUser:
+                    return " ایجاد کاربر کلینیک جدید با نام " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.DeleteClinicUser:
+                    return " حذف کاربر کلینیک " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.UpdateClinicUser:
+                    return " بروزرسانی کاربر کلینیک " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.CreateHisNovinUser:
+                    return " ایجاد کاربر اچ آی اس نوین جدید با نام " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.DeleteHisNovinUser:
+                    return " حذف کاربر اچ آی اس نوین " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+                case ActivityLogType.UpdateHisNovinUser:
+                    return " بروزرسانی کاربر اچ آی اس نوین " + userActivityLogDto.NewValues + " در تاریخ " + UtilityManager.GregorianDateTimeToPersianDate(DateTime.Now);
+
                 default:
                     return string.Empty;
             }

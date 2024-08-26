@@ -5,9 +5,9 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UsersManagement.Domain.Interfaces
+namespace UsersManagement.Domain.Interfaces.GenericRepositories
 {
-    public interface IRepository<T> where T : class
+    public interface IIdentityServerGenericRepository<T> where T : class
     {
         Task<T?> GetAsync(int id);
         Task<bool> IsExist(Expression<Func<T, bool>> filter);
@@ -22,7 +22,7 @@ namespace UsersManagement.Domain.Interfaces
         Task AddAsync(T entity);
         Task AddRangeAsync(List<T> entity);
 
-        void Remove(T entity);
+        Task Remove(T entity);
         Task RemoveRangeAsync(List<T> entity);
 
         Task UpdateAsync(T item);

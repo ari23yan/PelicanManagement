@@ -16,6 +16,7 @@ using UsersManagement.Domain.Dtos.Common.Pagination;
 using UsersManagement.Domain.Entities.UsersManagement.Account;
 using UsersManagement.Domain.Dtos.Common;
 using UsersManagement.Domain.Dtos.UserActivity;
+using UsersManagement.Data.Repositories.GenericRepositories;
 
 namespace UsersManagement.Data.Repositories
 {

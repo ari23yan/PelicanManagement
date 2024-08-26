@@ -37,6 +37,24 @@ namespace UsersManagement.Domain.Enums
         public const string AddPelicanUser = "1fb5c6b0-6637-485a-b44a-b25a5c63a810";
         public const string DeletePelicanUser = "82ff23e6-0f79-47db-bc72-93d3f11841ba";
         public const string UpdatePelicanUser = "cf586431-d7af-4cee-a3ee-7a0447b395b5";
+
+
+
+
+        public const string GetClinicUsersDetail = "b80cec2a-672f-4485-ad9f-8229364a40bb";
+        public const string AddClinicUsers = "c88f156d-bf7c-4425-95d5-dafdf60d191b";
+        public const string DeleteClinicUsers = "aa2c9759-c0db-4217-913e-b89e33a4c762";
+        public const string UpdateClinicUsers = "3271d172-73d2-4249-8d4a-0ab16f4372e2";
+
+
+
+        public const string GetHisNovinUsersDetail = "628071f8-860b-4350-91e8-26c2eede30b9";
+        public const string AddHisNovinUsers = "c6634b9b-82dc-4d93-90df-5c8d38aa8bf9";
+        public const string DeleteHisNovinUsers = "53fd868a-0fc1-4a40-a6ac-52c61d29929f";
+        public const string UpdateHisNovinUsers = "d0116587-6afb-468b-98ce-811b5f8c32c7";
+
+
+
         #endregion
 
         #region Log Controller

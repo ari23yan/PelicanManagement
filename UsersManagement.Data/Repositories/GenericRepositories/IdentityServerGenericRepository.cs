@@ -1,21 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UsersManagement.Data.Context;
-using UsersManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using UsersManagement.Domain.Interfaces.GenericRepositories;
 
-namespace UsersManagement.Data.Repositories
+namespace UsersManagement.Data.Repositories.GenericRepositories
 {
-    public class PelicanGenericRepository<T> : IPelicanGenericRepository<T> where T : class
+    public class IdentityServerGenericRepository<T> : IIdentityServerGenericRepository<T> where T : class
     {
-        protected readonly PelicanDbContext Context;
+        protected readonly IdentityServerDbContext Context;
         protected DbSet<T> entities;
 
-        public PelicanGenericRepository(PelicanDbContext context)
+        public IdentityServerGenericRepository(IdentityServerDbContext context)
         {
             Context = context;
             entities = Context.Set<T>();
@@ -139,5 +139,6 @@ namespace UsersManagement.Data.Repositories
         {
             return await entities.LastOrDefaultAsync(filter);
         }
+    }
 }
-}
+

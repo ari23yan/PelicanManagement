@@ -30,5 +30,16 @@ namespace UsersManagement.Domain.Enums
         DeleteTeriageUser,
         UpdateTeriageUser,
 
+
+
+        CreateClinicUser,
+        DeleteClinicUser,
+        UpdateClinicUser,
+
+
+        CreateHisNovinUser,
+        DeleteHisNovinUser,
+        UpdateHisNovinUser,
+
     }
 }

@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Data;
 using UsersManagement.Domain.Entities.UsersManagement.Account;
 using UsersManagement.Domain.Enums;
+using UsersManagement.Domain.Interfaces.GenericRepositories;
 
 namespace UsersManagement.Application.Services.Implementations
 {

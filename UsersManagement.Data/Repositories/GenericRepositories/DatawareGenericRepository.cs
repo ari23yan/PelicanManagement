@@ -1,26 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UsersManagement.Data.Context;
-using UsersManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using UsersManagement.Data.Context;
+using UsersManagement.Domain.Interfaces.GenericRepositories;
 
-namespace UsersManagement.Data.Repositories
+namespace UsersManagement.Data.Repositories.GenericRepositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class DatawareGenericRepository<T> : IDatawareGenericRepository<T> where T : class
     {
-        protected readonly AppDbContext Context;
+        protected readonly DatawareDbContext Context;
         protected DbSet<T> entities;
 
-        public Repository(AppDbContext context)
+        public DatawareGenericRepository(DatawareDbContext context)
         {
             Context = context;
             entities = Context.Set<T>();
         }
-
         public async Task AddAsync(T entity)
         {
             try
@@ -33,7 +32,6 @@ namespace UsersManagement.Data.Repositories
                 throw;
             }
         }
-
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             return await entities.ToListAsync();
@@ -54,9 +52,20 @@ namespace UsersManagement.Data.Repositories
             return await entities.SingleOrDefaultAsync(filter);
         }
 
-        public void Remove(T entity)
+        public async Task Remove(T entity)
         {
-            entities.Remove(entity);
+            using var transaction = await Context.Database.BeginTransactionAsync();
+            try
+            {
+                entities.Remove(entity);
+                await Context.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public virtual async Task UpdateAsync(T entity)

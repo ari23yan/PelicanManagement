@@ -1,7 +1,6 @@
 ﻿using UsersManagement.Application.Services.Interfaces;
 using UsersManagement.Domain.Interfaces;
 using UsersManagement.Application.Services.Interfaces;
-using UsersManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +15,7 @@ using UsersManagement.Domain.Dtos.Common.ResponseModel;
 using UsersManagement.Domain.Dtos.UserActivity;
 using UsersManagement.Domain.Dtos.Common.Pagination;
 using UsersManagement.Domain.Dtos.User;
+using UsersManagement.Domain.Interfaces.GenericRepositories;
 
 namespace UsersManagement.Application.Services.Implementations
 {

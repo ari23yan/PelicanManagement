@@ -217,7 +217,7 @@ namespace UsersManagement.Application.Services.Implementations
             userDetailDto.AllRoles = allRoles.Data.ToList();
             userDetailDto.UserActivities = _mapper.Map<List<UserActivityLogDto>>(userActivitiesDto);
 
-            var allPermission = allPermissions
+            var allPermission = allPermissions.OrderBy(x => x.CreatedDate)
                .Select(g => new PermissionsDto
                {
                    Id = g.Id,

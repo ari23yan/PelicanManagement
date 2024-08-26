@@ -15,6 +15,15 @@ builder.Services.AddDbContext<AppDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("UsersManagement")
     ));
 
+
+builder.Services.AddDbContext<HisClinicDbContext>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("HisClinic")
+    ));
+
+builder.Services.AddDbContext<DatawareDbContext>(option =>
+    option.UseSqlServer(builder.Configuration.GetConnectionString("DatawareHisNovin")
+    ));
+
 builder.Services.AddDbContext<PelicanDbContext>(option =>
     option.UseSqlServer(builder.Configuration.GetConnectionString("Mldhsp7Pelican")
     ));
@@ -112,7 +121,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "UsersManagement v1");
-        c.RoutePrefix = string.Empty; // Change this if you want Swagger UI at a different URL
     });
 }
 else
@@ -127,6 +135,7 @@ else
 }
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllers();
 
